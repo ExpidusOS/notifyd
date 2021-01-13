@@ -1,5 +1,5 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
  *  Copyright (c) 2008 Brian Tarricone <bjt23@cornell.edu>
  *
@@ -30,27 +30,27 @@
 #include <gtk/gtk.h>
 
 #include <xfconf/xfconf.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
-#include "xfce-notify-daemon.h"
+#include "expidus-notify-daemon.h"
 
 int
 main(int argc,
      char **argv)
 {
-    XfceNotifyDaemon *xndaemon;
+    ExpidusNotifyDaemon *xndaemon;
     GError *error = NULL;
 
     xfconf_init(NULL);
  	
     gtk_init(&argc, &argv);
 
-    xfce_textdomain(GETTEXT_PACKAGE, LOCALEDIR, "UTF-8");
+    expidus_textdomain(GETTEXT_PACKAGE, LOCALEDIR, "UTF-8");
 
     if(argc > 1) {
         if(!strcmp(argv[1], "--version") || !strcmp(argv[1], "-V")) {
-            g_print("%s %s\n", _("Xfce Notify Daemon"), VERSION);
+            g_print("%s %s\n", _("Expidus Notify Daemon"), VERSION);
             return 0;
         } else {
             g_printerr(_("Unknown option \"%s\"\n"), argv[1]);
@@ -58,9 +58,9 @@ main(int argc,
         }
     }
 
-    xndaemon = xfce_notify_daemon_new_unique(&error);
+    xndaemon = expidus_notify_daemon_new_unique(&error);
     if(!xndaemon) {
-        xfce_message_dialog(NULL, _("Xfce Notify Daemon"),
+        expidus_message_dialog(NULL, _("Expidus Notify Daemon"),
                             "dialog-error",
                             _("Unable to start notification daemon"),
                             error->message,

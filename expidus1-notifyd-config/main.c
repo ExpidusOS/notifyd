@@ -1,5 +1,5 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
  *  Copyright (c) 2008 Brian Tarricone <bjt23@cornell.edu>
  *
@@ -33,12 +33,12 @@
 #include <gtk/gtkx.h>
 
 #include <xfconf/xfconf.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 #include <libnotify/notify.h>
 
-#include <common/xfce-notify-log.h>
+#include <common/expidus-notify-log.h>
 
-#include "xfce4-notifyd-config.ui.h"
+#include "expidus1-notifyd-config.ui.h"
 
 #define KNOWN_APPLICATIONS_PROP       "/applications/known_applications"
 #define MUTED_APPLICATIONS_PROP       "/applications/muted_applications"
@@ -61,7 +61,7 @@ typedef struct
 } NotificationSlideoutWidgets;
 
 static void
-xfce_notifyd_config_show_notification_callback(NotifyNotification *notification,
+expidus_notifyd_config_show_notification_callback(NotifyNotification *notification,
                                                const char         *action,
                                                gpointer            unused)
 {
@@ -69,7 +69,7 @@ xfce_notifyd_config_show_notification_callback(NotifyNotification *notification,
 }
 
 static void
-xfce_notifyd_config_show_notification_preview(GtkWindow *parent_window)
+expidus_notifyd_config_show_notification_preview(GtkWindow *parent_window)
 {
     NotifyNotification *notification;
     GError             *error = NULL;
@@ -77,17 +77,17 @@ xfce_notifyd_config_show_notification_preview(GtkWindow *parent_window)
     notification =
         notify_notification_new(_("Notification Preview"),
                                 _("This is what notifications will look like"),
-                                "xfce4-notifyd");
+                                "expidus1-notifyd");
 
     notify_notification_add_action(notification,
                                    "button",
                                    _("Button"),
-                                   (NotifyActionCallback) xfce_notifyd_config_show_notification_callback,
+                                   (NotifyActionCallback) expidus_notifyd_config_show_notification_callback,
                                    NULL,
                                    NULL);
 
     if (!notify_notification_show(notification, &error)) {
-        xfce_dialog_show_error(parent_window, error,
+        expidus_dialog_show_error(parent_window, error,
                                _("Notification preview failed"));
 
         g_error_free(error);
@@ -97,7 +97,7 @@ xfce_notifyd_config_show_notification_preview(GtkWindow *parent_window)
 }
 
 static gchar *
-xfce4_notifyd_slider_format_value(GtkScale *slider,
+expidus1_notifyd_slider_format_value(GtkScale *slider,
                                   gdouble value,
                                   gpointer user_data)
 {
@@ -105,7 +105,7 @@ xfce4_notifyd_slider_format_value(GtkScale *slider,
 }
 
 static void
-xfce4_notifyd_config_theme_combo_changed(GtkComboBox *theme_combo,
+expidus1_notifyd_config_theme_combo_changed(GtkComboBox *theme_combo,
                                          gpointer user_data)
 {
     XfconfChannel *channel = user_data;
@@ -124,7 +124,7 @@ xfce4_notifyd_config_theme_combo_changed(GtkComboBox *theme_combo,
 }
 
 static void
-xfce4_notifyd_config_theme_changed(XfconfChannel *channel,
+expidus1_notifyd_config_theme_changed(XfconfChannel *channel,
                                    const gchar *property,
                                    const GValue *value,
                                    gpointer user_data)
@@ -150,7 +150,7 @@ xfce4_notifyd_config_theme_changed(XfconfChannel *channel,
                                           &iter);
             g_free(theme);
 
-            xfce_notifyd_config_show_notification_preview(GTK_WINDOW(gtk_widget_get_toplevel(theme_combo)));
+            expidus_notifyd_config_show_notification_preview(GTK_WINDOW(gtk_widget_get_toplevel(theme_combo)));
 
             return;
         }
@@ -184,7 +184,7 @@ list_store_add_themes_in_dir(GtkListStore *ls,
             continue;
 
         filename =
-            g_build_filename(path, file, "xfce-notify-4.0", "gtk.css", NULL);
+            g_build_filename(path, file, "expidus-notify-4.0", "gtk.css", NULL);
 
         if (g_file_test(filename, G_FILE_TEST_IS_REGULAR)) {
             GtkTreeIter iter;
@@ -216,7 +216,7 @@ list_store_add_themes_in_dir(GtkListStore *ls,
 }
 
 static void
-xfce4_notifyd_config_setup_theme_combo(GtkWidget *theme_combo,
+expidus1_notifyd_config_setup_theme_combo(GtkWidget *theme_combo,
                                        const gchar *current_theme)
 {
     GtkListStore *ls;
@@ -229,12 +229,12 @@ xfce4_notifyd_config_setup_theme_combo(GtkWidget *theme_combo,
     themes_seen = g_hash_table_new_full(g_str_hash, g_str_equal,
                                         (GDestroyNotify)g_free, NULL);
 
-    dirname = g_build_filename(xfce_get_homedir(), ".themes", NULL);
+    dirname = g_build_filename(expidus_get_homedir(), ".themes", NULL);
     list_store_add_themes_in_dir(ls, dirname, current_theme,
                                  themes_seen, &current_theme_iter);
     g_free(dirname);
 
-    dirnames = xfce_resource_lookup_all(XFCE_RESOURCE_DATA, "themes/");
+    dirnames = expidus_resource_lookup_all(EXPIDUS_RESOURCE_DATA, "themes/");
     for(i = 0; dirnames && dirnames[i]; ++i)
         list_store_add_themes_in_dir(ls, dirnames[i], current_theme,
                                      themes_seen, &current_theme_iter);
@@ -252,18 +252,18 @@ xfce4_notifyd_config_setup_theme_combo(GtkWidget *theme_combo,
 }
 
 static void
-xfce_notifyd_config_dialog_response(GtkWidget *dialog, gint response, gpointer unused)
+expidus_notifyd_config_dialog_response(GtkWidget *dialog, gint response, gpointer unused)
 {
   if (response == 0)
       g_signal_stop_emission_by_name (dialog, "response");
 }
 
 static void
-xfce_notifyd_config_preview_clicked(GtkButton *button)
+expidus_notifyd_config_preview_clicked(GtkButton *button)
 {
   GtkWidget *window = gtk_widget_get_toplevel (GTK_WIDGET (button));
 
-  xfce_notifyd_config_show_notification_preview (GTK_WINDOW (window));
+  expidus_notifyd_config_show_notification_preview (GTK_WINDOW (window));
 }
 
 /* Shows a separator before each row. */
@@ -282,7 +282,7 @@ display_header_func (GtkListBoxRow *row,
 }
 
 static void
-xfce4_notifyd_mute_application (GtkListBox *known_applications_listbox,
+expidus1_notifyd_mute_application (GtkListBox *known_applications_listbox,
                                 GtkListBoxRow *selected_application_row,
                                 XfconfChannel *channel)
 {
@@ -334,7 +334,7 @@ xfce4_notifyd_mute_application (GtkListBox *known_applications_listbox,
 }
 
 static void
-xfce4_notifyd_row_activated (GtkListBox *known_applications_listbox,
+expidus1_notifyd_row_activated (GtkListBox *known_applications_listbox,
                              GtkListBoxRow *selected_application_row,
                              gpointer user_data)
 {
@@ -349,7 +349,7 @@ xfce4_notifyd_row_activated (GtkListBox *known_applications_listbox,
 }
 
 static void
-xfce4_notifyd_switch_activated (GtkSwitch *mute_switch,
+expidus1_notifyd_switch_activated (GtkSwitch *mute_switch,
                                 gboolean state,
                                 gpointer user_data)
 {
@@ -358,12 +358,12 @@ xfce4_notifyd_switch_activated (GtkSwitch *mute_switch,
     GtkWidget *selected_application_row;
     GtkWidget *known_applications_listbox;
 
-    g_return_if_fail (XFCONF_IS_CHANNEL (channel));
+    g_return_if_fail (ESCONF_IS_CHANNEL (channel));
 
     row_box = gtk_widget_get_parent (GTK_WIDGET (mute_switch));
     selected_application_row = gtk_widget_get_parent (GTK_WIDGET (row_box));
     known_applications_listbox = gtk_widget_get_parent (GTK_WIDGET (selected_application_row));
-    xfce4_notifyd_mute_application (GTK_LIST_BOX (known_applications_listbox),
+    expidus1_notifyd_mute_application (GTK_LIST_BOX (known_applications_listbox),
                                     GTK_LIST_BOX_ROW (selected_application_row),
                                     channel);
 }
@@ -376,7 +376,7 @@ listbox_remove_all (GtkWidget *widget, gpointer user_data)
 }
 
 static void
-xfce4_notifyd_known_applications_changed (XfconfChannel *channel,
+expidus1_notifyd_known_applications_changed (XfconfChannel *channel,
                                const gchar *property,
                                const GValue *value,
                                gpointer user_data)
@@ -464,7 +464,7 @@ xfce4_notifyd_known_applications_changed (XfconfChannel *channel,
                         continue;
                 }
             }
-            g_signal_connect (G_OBJECT (mute_switch), "state-set", G_CALLBACK (xfce4_notifyd_switch_activated), channel);
+            g_signal_connect (G_OBJECT (mute_switch), "state-set", G_CALLBACK (expidus1_notifyd_switch_activated), channel);
         }
     }
     xfconf_array_free (known_applications);
@@ -473,7 +473,7 @@ xfce4_notifyd_known_applications_changed (XfconfChannel *channel,
 }
 
 static void
-xfce4_notifyd_do_not_disturb_activated (GtkSwitch *do_not_disturb_switch,
+expidus1_notifyd_do_not_disturb_activated (GtkSwitch *do_not_disturb_switch,
                                         gboolean state,
                                         gpointer user_data)
 {
@@ -485,7 +485,7 @@ xfce4_notifyd_do_not_disturb_activated (GtkSwitch *do_not_disturb_switch,
 }
 
 static void
-xfce4_notifyd_do_fadeout_activated (GtkSwitch *do_fadeout,
+expidus1_notifyd_do_fadeout_activated (GtkSwitch *do_fadeout,
                                     gboolean state,
                                     gpointer user_data)
 {
@@ -500,7 +500,7 @@ xfce4_notifyd_do_fadeout_activated (GtkSwitch *do_fadeout,
 }
 
 static void
-xfce4_notifyd_log_activated (GtkSwitch *log_switch,
+expidus1_notifyd_log_activated (GtkSwitch *log_switch,
                              gboolean state,
                              gpointer user_data)
 {
@@ -518,10 +518,10 @@ xfce4_notifyd_log_activated (GtkSwitch *log_switch,
 }
 
 static void
-xfce4_notifyd_log_open (GtkButton *button, gpointer user_data) {
+expidus1_notifyd_log_open (GtkButton *button, gpointer user_data) {
     gchar *notify_log_path;
 
-    notify_log_path = xfce_resource_lookup (XFCE_RESOURCE_CACHE, XFCE_NOTIFY_LOG_FILE);
+    notify_log_path = expidus_resource_lookup (EXPIDUS_RESOURCE_CACHE, EXPIDUS_NOTIFY_LOG_FILE);
     if (notify_log_path) {
         gchar *uri = g_strdup_printf ("file://%s", notify_log_path);
         if (!g_app_info_launch_default_for_uri (uri, NULL, NULL))
@@ -532,7 +532,7 @@ xfce4_notifyd_log_open (GtkButton *button, gpointer user_data) {
 }
 
 static void
-xfce4_notifyd_log_populate (NotificationLogWidgets *log_widgets)
+expidus1_notifyd_log_populate (NotificationLogWidgets *log_widgets)
 {
     GtkWidget *const log_listbox = log_widgets->log_listbox;
     GKeyFile *notify_log;
@@ -550,9 +550,9 @@ xfce4_notifyd_log_populate (NotificationLogWidgets *log_widgets)
     timestamp = g_date_time_format (today, "%F");
 
     gtk_container_foreach (GTK_CONTAINER (log_listbox), func, log_listbox);
-    notify_log = xfce_notify_log_get();
-    notify_log_icon_folder = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                          XFCE_NOTIFY_ICON_PATH, TRUE);
+    notify_log = expidus_notify_log_get();
+    notify_log_icon_folder = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                          EXPIDUS_NOTIFY_ICON_PATH, TRUE);
 
     if (notify_log) {
         gchar **groups;
@@ -693,7 +693,7 @@ xfce4_notifyd_log_populate (NotificationLogWidgets *log_widgets)
             gtk_widget_set_margin_top (limit_button, 3);
             gtk_button_set_relief (GTK_BUTTON (limit_button), GTK_RELIEF_NONE);
             g_signal_connect (G_OBJECT (limit_button), "clicked",
-                              G_CALLBACK (xfce4_notifyd_log_open), log_listbox);
+                              G_CALLBACK (expidus1_notifyd_log_open), log_listbox);
             gtk_list_box_insert (GTK_LIST_BOX (log_listbox), limit_button, LOG_DISPLAY_LIMIT + 1);
         }
         g_strfreev (groups);
@@ -712,16 +712,16 @@ xfce4_notifyd_log_populate (NotificationLogWidgets *log_widgets)
 }
 
 static void
-xfce4_notifyd_log_refresh (GtkButton *button, gpointer user_data) {
-    xfce4_notifyd_log_populate (user_data);
+expidus1_notifyd_log_refresh (GtkButton *button, gpointer user_data) {
+    expidus1_notifyd_log_populate (user_data);
 }
 
-static void xfce_notify_log_clear_button_clicked (GtkButton *button, gpointer user_data) {
+static void expidus_notify_log_clear_button_clicked (GtkButton *button, gpointer user_data) {
     GtkWidget *log_listbox = ((NotificationLogWidgets *) user_data)->log_listbox;
     GtkCallback func = listbox_remove_all;
     GtkWidget *dialog;
 
-    dialog = xfce_notify_clear_log_dialog ();
+    dialog = expidus_notify_clear_log_dialog ();
     gint result = gtk_dialog_run (GTK_DIALOG (dialog));
     /* Clear the listbox widget too in case the log is cleared */
     if (result == GTK_RESPONSE_OK)
@@ -729,13 +729,13 @@ static void xfce_notify_log_clear_button_clicked (GtkButton *button, gpointer us
     gtk_widget_destroy (dialog);
 }
 
-static void xfce4_notifyd_show_help(GtkButton *button,
+static void expidus1_notifyd_show_help(GtkButton *button,
                                     GtkWidget *dialog)
 {
-    xfce_dialog_show_help_with_version(GTK_WINDOW(dialog), "notifyd", "start", NULL, NULL);
+    expidus_dialog_show_help_with_version(GTK_WINDOW(dialog), "notifyd", "start", NULL, NULL);
 }
 
-static void xfce_notify_bus_name_appeared_cb (GDBusConnection *connection,
+static void expidus_notify_bus_name_appeared_cb (GDBusConnection *connection,
                                               const gchar *name,
                                               const gchar *name_owner,
                                               gpointer user_data)
@@ -745,7 +745,7 @@ static void xfce_notify_bus_name_appeared_cb (GDBusConnection *connection,
     gtk_revealer_set_reveal_child (GTK_REVEALER (notifyd_running), FALSE);
 }
 
-static void xfce_notify_bus_name_vanished_cb (GDBusConnection *connection,
+static void expidus_notify_bus_name_vanished_cb (GDBusConnection *connection,
                                               const gchar *name,
                                               gpointer user_data)
 {
@@ -770,7 +770,7 @@ placeholder_label_new (gchar *place_holder_text)
 }
 
 static GtkWidget *
-xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
+expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
 {
     XfconfChannel *channel;
     GtkWidget *dlg;
@@ -803,7 +803,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
 
     dlg = GTK_WIDGET(gtk_builder_get_object(builder, "notifyd_settings_dlg"));
     g_signal_connect(G_OBJECT(dlg), "response",
-                     G_CALLBACK(xfce_notifyd_config_dialog_response), NULL);
+                     G_CALLBACK(expidus_notifyd_config_dialog_response), NULL);
 
     btn = GTK_WIDGET(gtk_builder_get_object(builder, "close_btn"));
     g_signal_connect_swapped(G_OBJECT(btn), "clicked",
@@ -811,10 +811,10 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
 
     help_button = GTK_WIDGET(gtk_builder_get_object(builder, "help_btn"));
     g_signal_connect(G_OBJECT(help_button), "clicked",
-                    G_CALLBACK(xfce4_notifyd_show_help), dlg);
+                    G_CALLBACK(expidus1_notifyd_show_help), dlg);
 
     if(!xfconf_init(&error)) {
-        xfce_message_dialog(NULL, _("Xfce Notify Daemon"),
+        expidus_message_dialog(NULL, _("Expidus Notify Daemon"),
                             "dialog-error",
                             _("Settings daemon is unavailable"),
                             error->message,
@@ -823,7 +823,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
         exit(EXIT_FAILURE);
     }
 
-    channel = xfconf_channel_new("xfce4-notifyd");
+    channel = xfconf_channel_new("expidus1-notifyd");
 
     /**************
         GENERAL   *
@@ -837,7 +837,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
     gtk_revealer_set_reveal_child (GTK_REVEALER (do_not_disturb_info),
                                    gtk_switch_get_active (GTK_SWITCH (do_not_disturb_switch)));
     g_signal_connect (G_OBJECT (do_not_disturb_switch), "state-set",
-                      G_CALLBACK (xfce4_notifyd_do_not_disturb_activated), do_not_disturb_info);
+                      G_CALLBACK (expidus1_notifyd_do_not_disturb_activated), do_not_disturb_info);
 
     primary_monitor = GTK_WIDGET(gtk_builder_get_object(builder, "primary_monitor"));
     xfconf_g_property_bind(channel, "/primary-monitor", G_TYPE_UINT,
@@ -848,13 +848,13 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
     // Appearance
     theme_combo = GTK_WIDGET(gtk_builder_get_object(builder, "theme_combo"));
     current_theme = xfconf_channel_get_string(channel, "/theme", "Default");
-    xfce4_notifyd_config_setup_theme_combo(theme_combo, current_theme);
+    expidus1_notifyd_config_setup_theme_combo(theme_combo, current_theme);
     g_free(current_theme);
     g_signal_connect(G_OBJECT(theme_combo), "changed",
-                     G_CALLBACK(xfce4_notifyd_config_theme_combo_changed),
+                     G_CALLBACK(expidus1_notifyd_config_theme_combo_changed),
                      channel);
     g_signal_connect(G_OBJECT(channel), "property-changed::/theme",
-                     G_CALLBACK(xfce4_notifyd_config_theme_changed),
+                     G_CALLBACK(expidus1_notifyd_config_theme_changed),
                      theme_combo);
 
     position_combo = GTK_WIDGET(gtk_builder_get_object(builder, "position_combo"));
@@ -865,7 +865,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
 
     slider = GTK_WIDGET(gtk_builder_get_object(builder, "opacity_slider"));
     g_signal_connect(G_OBJECT(slider), "format-value",
-                     G_CALLBACK(xfce4_notifyd_slider_format_value), NULL);
+                     G_CALLBACK(expidus1_notifyd_slider_format_value), NULL);
     adj = gtk_range_get_adjustment(GTK_RANGE(slider));
     xfconf_g_property_bind(channel, "/initial-opacity", G_TYPE_DOUBLE,
                            G_OBJECT(adj), "value");
@@ -884,7 +884,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
     xfconf_g_property_bind(channel, "/do-slideout", G_TYPE_BOOLEAN,
                            G_OBJECT(slideout_widgets.do_slideout), "active");
     g_signal_connect (G_OBJECT (do_fadeout), "state-set",
-                      G_CALLBACK (xfce4_notifyd_do_fadeout_activated), &slideout_widgets);
+                      G_CALLBACK (expidus1_notifyd_do_fadeout_activated), &slideout_widgets);
     if (gtk_switch_get_active (GTK_SWITCH (do_fadeout)) == FALSE) {
         gtk_widget_set_sensitive (slideout_widgets.do_slideout_label, FALSE);
         gtk_widget_set_sensitive (slideout_widgets.do_slideout, FALSE);
@@ -892,7 +892,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
 
     btn = GTK_WIDGET(gtk_builder_get_object(builder, "preview_button"));
     g_signal_connect(G_OBJECT(btn), "clicked",
-                     G_CALLBACK(xfce_notifyd_config_preview_clicked), NULL);
+                     G_CALLBACK(expidus_notifyd_config_preview_clicked), NULL);
 
     /*******************
         APPLICATIONS   *
@@ -906,15 +906,15 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
                                                  "\nAs soon as an application sends a notification"
                                                  "\nit will appear in this list."));
     /* Initialize the list of known applications */
-    xfce4_notifyd_known_applications_changed (channel, KNOWN_APPLICATIONS_PROP, NULL, known_applications_listbox);
+    expidus1_notifyd_known_applications_changed (channel, KNOWN_APPLICATIONS_PROP, NULL, known_applications_listbox);
     gtk_list_box_set_placeholder (GTK_LIST_BOX (known_applications_listbox), placeholder_label);
     gtk_widget_show_all (placeholder_label);
     g_signal_connect (G_OBJECT (known_applications_listbox), "row-activated",
-                      G_CALLBACK (xfce4_notifyd_row_activated),
+                      G_CALLBACK (expidus1_notifyd_row_activated),
                       channel);
     g_signal_connect (G_OBJECT (channel),
                       "property-changed::" KNOWN_APPLICATIONS_PROP,
-                      G_CALLBACK (xfce4_notifyd_known_applications_changed), known_applications_listbox);
+                      G_CALLBACK (expidus1_notifyd_known_applications_changed), known_applications_listbox);
 
     /**********
         LOG   *
@@ -927,7 +927,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
     xfconf_g_property_bind (channel, "/notification-log", G_TYPE_BOOLEAN,
                             G_OBJECT (log_switch), "active");
     g_signal_connect (G_OBJECT (log_switch), "state-set",
-                      G_CALLBACK (xfce4_notifyd_log_activated), &log_widgets);
+                      G_CALLBACK (expidus1_notifyd_log_activated), &log_widgets);
     xfconf_g_property_bind(channel, "/log-level", G_TYPE_UINT,
                            G_OBJECT(log_widgets.log_level), "active");
     xfconf_g_property_bind(channel, "/log-level-apps", G_TYPE_UINT,
@@ -941,7 +941,7 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
         gtk_combo_box_set_active(GTK_COMBO_BOX(log_widgets.log_level), 0);
     if(gtk_combo_box_get_active(GTK_COMBO_BOX(log_widgets.log_level_apps)) == -1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(log_widgets.log_level_apps), 0);
-    xfce4_notifyd_log_activated (GTK_SWITCH (log_switch), gtk_switch_get_active (GTK_SWITCH(log_switch)), &log_widgets);
+    expidus1_notifyd_log_activated (GTK_SWITCH (log_switch), gtk_switch_get_active (GTK_SWITCH(log_switch)), &log_widgets);
 
     log_scrolled_window = GTK_WIDGET (gtk_builder_get_object (builder, "log_scrolled_window"));
     log_widgets.log_listbox = gtk_list_box_new ();
@@ -959,24 +959,24 @@ xfce4_notifyd_config_setup_dialog(GtkBuilder *builder)
     gtk_widget_set_tooltip_text (GTK_WIDGET (log_refresh_button), _("Refresh the notification log"));
     gtk_toolbar_insert(log_widgets.log_toolbar, GTK_TOOL_ITEM(log_refresh_button), 0);
     g_signal_connect (G_OBJECT (log_refresh_button), "clicked",
-                      G_CALLBACK (xfce4_notifyd_log_refresh), &log_widgets);
+                      G_CALLBACK (expidus1_notifyd_log_refresh), &log_widgets);
     icon = gtk_image_new_from_icon_name ("document-open-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_image_set_pixel_size (GTK_IMAGE (icon), 16);
     log_open_button = gtk_tool_button_new (icon, _("Open"));
     gtk_widget_set_tooltip_text (GTK_WIDGET (log_open_button), _("Open the notification log in an external editor"));
     gtk_toolbar_insert(log_widgets.log_toolbar, GTK_TOOL_ITEM(log_open_button), 1);
     g_signal_connect (G_OBJECT (log_open_button), "clicked",
-                      G_CALLBACK (xfce4_notifyd_log_open), log_widgets.log_listbox);
+                      G_CALLBACK (expidus1_notifyd_log_open), log_widgets.log_listbox);
     icon = gtk_image_new_from_icon_name ("edit-clear-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_image_set_pixel_size (GTK_IMAGE (icon), 16);
     log_clear_button = gtk_tool_button_new (icon, _("Clear"));
     gtk_widget_set_tooltip_text (GTK_WIDGET (log_clear_button), _("Clear the notification log"));
     gtk_toolbar_insert(log_widgets.log_toolbar, GTK_TOOL_ITEM(log_clear_button), 2);
     g_signal_connect (G_OBJECT (log_clear_button), "clicked",
-                      G_CALLBACK (xfce_notify_log_clear_button_clicked), &log_widgets);
+                      G_CALLBACK (expidus_notify_log_clear_button_clicked), &log_widgets);
     gtk_widget_show_all (GTK_WIDGET(log_widgets.log_toolbar));
 
-    xfce4_notifyd_log_populate (&log_widgets);
+    expidus1_notifyd_log_populate (&log_widgets);
 
     return dlg;
 }
@@ -998,7 +998,7 @@ main(int argc,
     };
     GError *error = NULL;
 
-    xfce_textdomain(GETTEXT_PACKAGE, LOCALEDIR, "UTF-8");
+    expidus_textdomain(GETTEXT_PACKAGE, LOCALEDIR, "UTF-8");
 
     if(!gtk_init_with_args(&argc, &argv, NULL, option_entries, PACKAGE, &error)) {
         if(G_LIKELY(error)) {
@@ -1015,36 +1015,36 @@ main(int argc,
     if(G_UNLIKELY(opt_version)) {
         g_print("%s %s\n", G_LOG_DOMAIN, VERSION);
         g_print("Copyright (c) 2010 Brian Tarricone <bjt23@cornell.edu>\n");
-        g_print("Copyright (c) 2010 Jérôme Guelfucci <jeromeg@xfce.org>\n");
-        g_print("Copyright (c) 2016 Ali Abdallah <ali@xfce.org>\n");
-        g_print("Copyright (c) 2016 Simon Steinbeiß <simon@xfce.org>\n");
+        g_print("Copyright (c) 2010 Jérôme Guelfucci <jeromeg@expidus.org>\n");
+        g_print("Copyright (c) 2016 Ali Abdallah <ali@expidus.org>\n");
+        g_print("Copyright (c) 2016 Simon Steinbeiß <simon@expidus.org>\n");
         g_print(_("Released under the terms of the GNU General Public License, version 2\n"));
         g_print(_("Please report bugs to %s.\n"), PACKAGE_BUGREPORT);
 
         return EXIT_SUCCESS;
     }
 
-    if (!notify_init ("Xfce4-notifyd settings")) {
+    if (!notify_init ("Expidus1-notifyd settings")) {
       g_error ("Failed to initialize libnotify.");
       return EXIT_FAILURE;
     }
 
     builder = gtk_builder_new();
-    gtk_builder_add_from_string(builder, xfce4_notifyd_config_ui, xfce4_notifyd_config_ui_length, NULL);
+    gtk_builder_add_from_string(builder, expidus1_notifyd_config_ui, expidus1_notifyd_config_ui_length, NULL);
     if(G_UNLIKELY(!builder)) {
         g_error("Unable to read embedded UI definition file");
         return EXIT_FAILURE;
     }
 
-    settings_dialog = xfce4_notifyd_config_setup_dialog(builder);
+    settings_dialog = expidus1_notifyd_config_setup_dialog(builder);
 
     notifyd_running = GTK_WIDGET (gtk_builder_get_object (builder, "notifyd_running"));
     gtk_revealer_set_reveal_child (GTK_REVEALER (notifyd_running), FALSE);
     watch_handle_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
                                         "org.freedesktop.Notifications",
                                         G_BUS_NAME_WATCHER_FLAGS_NONE,
-                                        xfce_notify_bus_name_appeared_cb,
-                                        xfce_notify_bus_name_vanished_cb,
+                                        expidus_notify_bus_name_appeared_cb,
+                                        expidus_notify_bus_name_vanished_cb,
                                         notifyd_running,
                                         NULL);
 

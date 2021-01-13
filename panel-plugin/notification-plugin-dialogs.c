@@ -1,6 +1,6 @@
-/*  xfce4-notification-plugin
+/*  expidus1-notification-plugin
  *
- *  Copyright (C) 2017 Simon Steinbeiß <simon@xfce.org>
+ *  Copyright (C) 2017 Simon Steinbeiß <simon@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,15 +25,15 @@
 #include <gtk/gtk.h>
 
 #include <xfconf/xfconf.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "notification-plugin.h"
 #include "notification-plugin-log.h"
 #include "notification-plugin-dialogs.h"
 
 /* the website url */
-#define PLUGIN_WEBSITE "https://docs.xfce.org/apps/notifyd/start"
+#define PLUGIN_WEBSITE "https://docs.expidus.org/apps/notifyd/start"
 
 
 
@@ -54,7 +54,7 @@ notification_plugin_configure_response (GtkWidget    *dialog,
   else
     {
       g_object_set_data (G_OBJECT (notification_plugin->plugin), "dialog", NULL);
-      xfce_panel_plugin_unblock_menu (notification_plugin->plugin);
+      expidus_panel_plugin_unblock_menu (notification_plugin->plugin);
       gtk_widget_destroy (dialog);
     }
 }
@@ -62,7 +62,7 @@ notification_plugin_configure_response (GtkWidget    *dialog,
 
 
 void
-notification_plugin_configure (XfcePanelPlugin      *plugin,
+notification_plugin_configure (ExpidusPanelPlugin      *plugin,
                                NotificationPlugin   *notification_plugin)
 {
   GtkWidget *dialog;
@@ -71,10 +71,10 @@ notification_plugin_configure (XfcePanelPlugin      *plugin,
   gdouble log_display_limit;
 
   /* block the plugin menu */
-  xfce_panel_plugin_block_menu (plugin);
+  expidus_panel_plugin_block_menu (plugin);
 
   /* create the dialog */
-  dialog = xfce_titled_dialog_new_with_mixed_buttons (_("Notification Plugin Settings"),
+  dialog = expidus_titled_dialog_new_with_mixed_buttons (_("Notification Plugin Settings"),
                                                       GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (plugin))),
                                                       GTK_DIALOG_DESTROY_WITH_PARENT,
                                                       "help-browser", _("_Help"), GTK_RESPONSE_HELP,
@@ -146,16 +146,16 @@ notification_plugin_configure (XfcePanelPlugin      *plugin,
 
 
 void
-notification_plugin_about (XfcePanelPlugin *plugin)
+notification_plugin_about (ExpidusPanelPlugin *plugin)
 {
   const gchar *auth[] =
     {
-      "Simon Steinbeiss <simon@xfce.org>",
+      "Simon Steinbeiss <simon@expidus.org>",
       NULL
     };
   gtk_show_about_dialog (NULL,
                          "logo-icon-name",         ICON_NAME,
-                         "license",                xfce_get_license_text (XFCE_LICENSE_TEXT_GPL),
+                         "license",                expidus_get_license_text (EXPIDUS_LICENSE_TEXT_GPL),
                          "version",                PACKAGE_VERSION,
                          "program-name",           PACKAGE_NAME,
                          "comments",               _("This is the notification plugin"),

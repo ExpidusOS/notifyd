@@ -11,41 +11,41 @@
 # Lovro Kudelić <lovro.kudelic@outlook.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce Apps\n"
+"Project-Id-Version: Expidus Apps\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-18 00:47+0200\n"
 "PO-Revision-Date: 2020-08-17 22:47+0000\n"
-"Last-Translator: Xfce Bot <transifex@xfce.org>\n"
-"Language-Team: Croatian (http://www.transifex.com/xfce/xfce-apps/language/hr/)\n"
+"Last-Translator: Expidus Bot <transifex@expidus.org>\n"
+"Language-Team: Croatian (http://www.transifex.com/expidus/expidus-apps/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: ../common/xfce-notify-log.c:480
+#: ../common/expidus-notify-log.c:480
 msgid "Do you really want to clear the notification log?"
 msgstr "Jeste li sigurni da želite očistiti zapise obavijesti?"
 
-#: ../common/xfce-notify-log.c:484
+#: ../common/expidus-notify-log.c:484
 msgid "Clear notification log"
 msgstr "Očisti zapis obavijesti"
 
-#: ../common/xfce-notify-log.c:487
+#: ../common/expidus-notify-log.c:487
 msgid "Cancel"
 msgstr "Otkaži"
 
-#: ../common/xfce-notify-log.c:489 ../xfce4-notifyd-config/main.c:964
+#: ../common/expidus-notify-log.c:489 ../expidus1-notifyd-config/main.c:964
 msgid "Clear"
 msgstr "Očisti"
 
-#: ../common/xfce-notify-log.c:502
+#: ../common/expidus-notify-log.c:502
 msgid "include icon cache"
 msgstr "uključi međuspremnik ikona"
 
 #: ../panel-plugin/notification-plugin.c:225
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:12
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.desktop.in.h:1
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:12
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.desktop.in.h:1
 msgid "Notifications"
 msgstr "Obavijesti"
 
@@ -60,12 +60,12 @@ msgid "Notification Plugin Settings"
 msgstr "Postavke priključka za obavijesti"
 
 #: ../panel-plugin/notification-plugin-dialogs.c:80
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:14
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:14
 msgid "_Help"
 msgstr "_Pomoć"
 
 #: ../panel-plugin/notification-plugin-dialogs.c:81
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:15
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:15
 msgid "_Close"
 msgstr "_Zatvori"
 
@@ -110,276 +110,276 @@ msgid "Notification Plugin"
 msgstr "Priključak za obavijesti"
 
 #: ../panel-plugin/notification-plugin.desktop.in.h:2
-msgid "Notification plugin for the Xfce panel"
-msgstr "Priključak za obavijesti Xfce ploče"
+msgid "Notification plugin for the Expidus panel"
+msgstr "Priključak za obavijesti Expidus ploče"
 
-#: ../xfce4-notifyd/main.c:53 ../xfce4-notifyd/main.c:63
-#: ../xfce4-notifyd-config/main.c:809
-msgid "Xfce Notify Daemon"
-msgstr "Xfce nadglednik obavijesti"
+#: ../expidus1-notifyd/main.c:53 ../expidus1-notifyd/main.c:63
+#: ../expidus1-notifyd-config/main.c:809
+msgid "Expidus Notify Daemon"
+msgstr "Expidus nadglednik obavijesti"
 
-#: ../xfce4-notifyd/main.c:56
+#: ../expidus1-notifyd/main.c:56
 #, c-format
 msgid "Unknown option \"%s\"\n"
 msgstr "Nepoznata opcija \"%s\"\n"
 
-#: ../xfce4-notifyd/main.c:65
+#: ../expidus1-notifyd/main.c:65
 msgid "Unable to start notification daemon"
 msgstr "Ne mogu pokrenuti nadglednika obavijesti"
 
-#: ../xfce4-notifyd/xfce-notify-daemon.c:405
+#: ../expidus1-notifyd/expidus-notify-daemon.c:405
 #, c-format
 msgid "Another notification daemon is running, exiting\n"
 msgstr "Drugi nadglednik obavijesti se izvodi, izlazim\n"
 
-#: ../xfce4-notifyd-config/main.c:78
+#: ../expidus1-notifyd-config/main.c:78
 msgid "Notification Preview"
 msgstr "Pregled obavijesti"
 
-#: ../xfce4-notifyd-config/main.c:79
+#: ../expidus1-notifyd-config/main.c:79
 msgid "This is what notifications will look like"
 msgstr "Ovako će izgledati obavijesti"
 
-#: ../xfce4-notifyd-config/main.c:84
+#: ../expidus1-notifyd-config/main.c:84
 msgid "Button"
 msgstr "Dugme"
 
-#: ../xfce4-notifyd-config/main.c:91
+#: ../expidus1-notifyd-config/main.c:91
 msgid "Notification preview failed"
 msgstr "Neuspjeli pregled obavijesti"
 
-#: ../xfce4-notifyd-config/main.c:505
+#: ../expidus1-notifyd-config/main.c:505
 #, c-format
 msgid ""
 "<b>Currently only urgent notifications are shown.</b>\n"
 "Notification logging is %s."
 msgstr "<b>Trenutno se prikazuju samo hitne obavijesti.</b>\nZapis notifikacija je %s."
 
-#: ../xfce4-notifyd-config/main.c:512
+#: ../expidus1-notifyd-config/main.c:512
 msgid "enabled"
 msgstr "omogućeno"
 
-#: ../xfce4-notifyd-config/main.c:512
+#: ../expidus1-notifyd-config/main.c:512
 msgid "disabled"
 msgstr "onemogućeno"
 
-#: ../xfce4-notifyd-config/main.c:593
+#: ../expidus1-notifyd-config/main.c:593
 msgid "Yesterday and before"
 msgstr "Jučer i prije toga"
 
-#: ../xfce4-notifyd-config/main.c:811
+#: ../expidus1-notifyd-config/main.c:811
 msgid "Settings daemon is unavailable"
 msgstr "Nadglednik postavki je nedostupan"
 
-#: ../xfce4-notifyd-config/main.c:897
+#: ../expidus1-notifyd-config/main.c:897
 msgid ""
 "<big><b>Currently there are no known applications.</b></big>\n"
 "As soon as an application sends a notification\n"
 "it will appear in this list."
 msgstr "<big><b>Trenutno nema poznatih aplikacija.</b></big>\nČim aplikacija pošalje obavijest\npojavit će se na ovoj listi."
 
-#: ../xfce4-notifyd-config/main.c:942
+#: ../expidus1-notifyd-config/main.c:942
 msgid ""
 "<big><b>Empty log</b></big>\n"
 "No notifications have been logged yet."
 msgstr "<big><b>Prazan zapis</b></big>\nNijedna obavijest još nije zapisana."
 
-#: ../xfce4-notifyd-config/main.c:950
+#: ../expidus1-notifyd-config/main.c:950
 msgid "Refresh"
 msgstr "Osvježi"
 
-#: ../xfce4-notifyd-config/main.c:951
+#: ../expidus1-notifyd-config/main.c:951
 msgid "Refresh the notification log"
 msgstr "Osvježi zapis obavijesti"
 
-#: ../xfce4-notifyd-config/main.c:957
+#: ../expidus1-notifyd-config/main.c:957
 msgid "Open"
 msgstr "Otvori"
 
-#: ../xfce4-notifyd-config/main.c:958
+#: ../expidus1-notifyd-config/main.c:958
 msgid "Open the notification log in an external editor"
 msgstr "Otvori zapis obavijesti u vanjskom uređivaču"
 
-#: ../xfce4-notifyd-config/main.c:965
+#: ../expidus1-notifyd-config/main.c:965
 msgid "Clear the notification log"
 msgstr "Očisti zapis obavijesti"
 
-#: ../xfce4-notifyd-config/main.c:987
+#: ../expidus1-notifyd-config/main.c:987
 msgid "Display version information"
 msgstr "Prikaži informaciju o verziji"
 
-#: ../xfce4-notifyd-config/main.c:988
+#: ../expidus1-notifyd-config/main.c:988
 msgid "Settings manager socket"
 msgstr "Priključak upravitelja postavkama"
 
-#: ../xfce4-notifyd-config/main.c:988
+#: ../expidus1-notifyd-config/main.c:988
 msgid "SOCKET_ID"
 msgstr "SOCKET_ID"
 
-#: ../xfce4-notifyd-config/main.c:998
+#: ../expidus1-notifyd-config/main.c:998
 #, c-format
 msgid "Type '%s --help' for usage."
 msgstr "Upišite '%s --help' za upotrebu."
 
-#: ../xfce4-notifyd-config/main.c:1013
+#: ../expidus1-notifyd-config/main.c:1013
 #, c-format
 msgid "Released under the terms of the GNU General Public License, version 2\n"
 msgstr "Objavljeno pod uvjetima GNU General Public License, verzija 2\n"
 
-#: ../xfce4-notifyd-config/main.c:1014
+#: ../expidus1-notifyd-config/main.c:1014
 #, c-format
 msgid "Please report bugs to %s.\n"
 msgstr "Molim prijavite probleme  %s.\n\n\n"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:1
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:1
 msgid "only during \"Do not disturb\""
 msgstr "samo tijekom \"Ne smetaj\""
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:2
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:2
 msgid "always"
 msgstr "uvijek"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:3
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:3
 msgid "all"
 msgstr "sve"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:4
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:4
 msgid "all except blocked"
 msgstr "sve osim blokiranih"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:5
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:5
 msgid "only blocked"
 msgstr "samo blokirane"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:6
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:6
 msgid "display with mouse pointer"
 msgstr "prikaži s pokazivačem miša"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:7
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:7
 msgid "primary display"
 msgstr "primarni zaslon"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:8
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:8
 msgid "Top left"
 msgstr "Gore lijevo"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:9
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:9
 msgid "Bottom left"
 msgstr "Dolje lijevo"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:10
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:10
 msgid "Top right"
 msgstr "Gore desno"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:11
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:11
 msgid "Bottom right"
 msgstr "Dolje desno"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:13
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:13
 msgid "Customize your notification settings"
 msgstr "Uredi svoje postavke obavijesti"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:16
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:16
 msgid ""
 "The notification service is not running. No notifications will be shown."
 msgstr "Servis za obavijesti nije pokrenut. Obavijesti neće biti prikazane."
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:17
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:17
 msgid "<b>Currently only urgent notifications are shown.</b>"
 msgstr "<b>Trenutno se prikazuju samo hitne obavijesti.</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:18
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:18
 msgid "Show _Preview"
 msgstr "Prikaži _pretpregled"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:19
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:19
 msgid "seconds"
 msgstr "sekunde"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:20
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:20
 msgid "_Disappear after"
 msgstr "_Nestaje poslije"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:21
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:21
 msgid "_Opacity"
 msgstr "_Vidljivost"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:22
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:22
 msgid "Fade out"
 msgstr "Postupno nestajanje"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:23
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:23
 msgid "_Slide out"
 msgstr "_Klizni vani"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:24
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:24
 msgid "Default _position"
 msgstr "Zadana _pozicija"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:25
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:25
 msgid "_Theme"
 msgstr "_Tema"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:26
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:26
 msgid "Do not disturb"
 msgstr "Ne ometaj"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:27
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:27
 msgid "<b>Behavior</b>"
 msgstr "<b>Ponašanje</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:28
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:28
 msgid "<b>Appearance</b>"
 msgstr "<b>Izgled</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:29
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:29
 msgid "<b>Animations</b>"
 msgstr "<b>Animacije</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:30
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:30
 msgid ""
 "By default the notification bubbles will be shown on the display on which "
 "the mouse pointer is located."
 msgstr "Prema zadanom prozorčić s obavijesti prikazat će se na lokaciji pokazivača miša."
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:31
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:31
 msgid "Show notifications on"
 msgstr "Prikaži obavijesti na"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:32
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:32
 msgid "General"
 msgstr "Općenito"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:33
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:33
 msgid "<b>Show or block notifications per application</b>"
 msgstr "<b>Prikaži ili blokiraj obavijesti prema aplikaciji</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:34
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:34
 msgid "Applications"
 msgstr "Programi"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:35
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:35
 msgid "Log notifications"
 msgstr "Zapisuj obavijesti"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:36
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:36
 msgid "Log applications"
 msgstr "Zapisuj aplikacije"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:37
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:37
 msgid "Log size limit"
 msgstr ""
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:38
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:38
 msgid ""
 "The maximum amount of entries to be retained in the log. Please note that a "
 "large log may lead to performance penalties. 0 means no limit."
 msgstr ""
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:39
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:39
 msgid "Log"
 msgstr "Zapisuj"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.desktop.in.h:2
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.desktop.in.h:2
 msgid "Customize how notifications appear on your screen"
 msgstr "Prilagodite kako će se obavijesti prikazivati na vašem ekranu"

@@ -1,6 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
-	-DG_LOG_DOMAIN=\"xfce4-notification-plugin\" \
+	-DG_LOG_DOMAIN=\"expidus1-notification-plugin\" \
 	-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
 	$(PLATFORM_CPPFLAGS)
 
@@ -11,7 +11,7 @@ plugin_LTLIBRARIES = \
 	libnotification-plugin.la
 
 plugindir = \
-	$(libdir)/xfce4/panel/plugins
+	$(libdir)/expidus1/panel/plugins
 
 libnotification_plugin_la_SOURCES = \
 	notification-plugin.c \
@@ -22,31 +22,31 @@ libnotification_plugin_la_SOURCES = \
 	notification-plugin-log.h
 
 libnotification_plugin_la_CFLAGS = \
-	$(LIBXFCE4UTIL_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
-	$(LIBXFCE4PANEL_CFLAGS) \
-	$(XFCONF_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
+	$(LIBEXPIDUS1PANEL_CFLAGS) \
+	$(ESCONF_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libnotification_plugin_la_LDFLAGS = \
        -avoid-version \
        -module \
        -no-undefined \
-       -export-symbols-regex '^xfce_panel_module_(preinit|init|construct)' \
+       -export-symbols-regex '^expidus_panel_module_(preinit|init|construct)' \
        $(PLATFORM_LDFLAGS)
 
 libnotification_plugin_la_LIBADD = \
-	$(top_builddir)/common/libxfce-notifyd-common.la \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(LIBXFCE4UI_LIBS) \
-	$(LIBXFCE4PANEL_LIBS)	\
-	$(XFCONF_LIBS)
+	$(top_builddir)/common/libexpidus-notifyd-common.la \
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(LIBEXPIDUS1UI_LIBS) \
+	$(LIBEXPIDUS1PANEL_LIBS)	\
+	$(ESCONF_LIBS)
 
 #
 # Desktop file
 #
 desktopdir =								\
-	$(datadir)/xfce4/panel/plugins
+	$(datadir)/expidus1/panel/plugins
 
 desktop_DATA =								\
 	notification-plugin.desktop

@@ -1,7 +1,7 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
- *  Copyright (c) 2016 Simon Steinbeiß <ochosi@xfce.org>
+ *  Copyright (c) 2016 Simon Steinbeiß <ochosi@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef __XFCE_NOTIFY_LOG_H_
-#define __XFCE_NOTIFY_LOG_H_
+#ifndef __EXPIDUS_NOTIFY_LOG_H_
+#define __EXPIDUS_NOTIFY_LOG_H_
 
 
-#define XFCE_NOTIFY_LOG_FILE  "xfce4/notifyd/log"
-#define XFCE_NOTIFY_ICON_PATH "xfce4/notifyd/icons/"
+#define EXPIDUS_NOTIFY_LOG_FILE  "expidus1/notifyd/log"
+#define EXPIDUS_NOTIFY_ICON_PATH "expidus1/notifyd/icons/"
 
 GdkPixbuf *notify_pixbuf_from_image_data (GVariant *image_data);
 
 gchar     *notify_icon_name_from_desktop_id (const gchar *desktop_id);
 
-GKeyFile  *xfce_notify_log_get (void);
+GKeyFile  *expidus_notify_log_get (void);
 
-void       xfce_notify_log_insert (const gchar *app_name,
+void       expidus_notify_log_insert (const gchar *app_name,
                                    const gchar *summary,
                                    const gchar *body,
                                    GVariant *image_data,
@@ -41,8 +41,8 @@ void       xfce_notify_log_insert (const gchar *app_name,
                                    const gchar **actions,
                                    gint log_max_size);
 
-GtkWidget *xfce_notify_clear_log_dialog (void);
+GtkWidget *expidus_notify_clear_log_dialog (void);
 
-void xfce_notify_log_clear (void);
+void expidus_notify_log_clear (void);
 
-#endif /* __XFCE_NOTIFY_LOG_H_ */
+#endif /* __EXPIDUS_NOTIFY_LOG_H_ */

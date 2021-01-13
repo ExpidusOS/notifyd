@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Expidus Notification Daemon
+Exec=@notifydir@/expidus1-notifyd
+Icon=org.expidus.notification
+OnlyShowIn=EXPIDUS;

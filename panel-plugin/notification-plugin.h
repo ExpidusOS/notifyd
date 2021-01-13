@@ -1,6 +1,6 @@
-/*  xfce4-notification-plugin
+/*  expidus1-notification-plugin
  *
- *  Copyright (C) 2017 Simon Steinbeiß <simon@xfce.org>
+ *  Copyright (C) 2017 Simon Steinbeiß <simon@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@ G_BEGIN_DECLS
 
 #include <xfconf/xfconf.h>
 
-#define ICON_NAME                 "org.xfce.notification"
-#define XFCE_NOTIFY_LOG_FILE      "xfce4/notifyd/log"
-#define XFCE_NOTIFY_ICON_PATH     "xfce4/notifyd/icons/"
+#define ICON_NAME                 "org.expidus.notification"
+#define EXPIDUS_NOTIFY_LOG_FILE      "expidus1/notifyd/log"
+#define EXPIDUS_NOTIFY_ICON_PATH     "expidus1/notifyd/icons/"
 #define SETTING_LOG_DISPLAY_LIMIT "/plugin/log-display-limit"
 #define DEFAULT_LOG_DISPLAY_LIMIT 10
 #define SETTING_LOG_ONLY_TODAY    "/plugin/log-only-today"
@@ -37,7 +37,7 @@ G_BEGIN_DECLS
 /* plugin structure */
 typedef struct
 {
-    XfcePanelPlugin *plugin;
+    ExpidusPanelPlugin *plugin;
     XfconfChannel   *channel;
 
     /* state */

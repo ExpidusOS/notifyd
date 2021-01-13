@@ -9,41 +9,41 @@
 # 黃柏諺 <s8321414@gmail.com>, 2020
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce Apps\n"
+"Project-Id-Version: Expidus Apps\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-18 00:47+0200\n"
 "PO-Revision-Date: 2020-08-18 07:47+0000\n"
 "Last-Translator: 黃柏諺 <s8321414@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/xfce/xfce-apps/language/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/expidus/expidus-apps/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../common/xfce-notify-log.c:480
+#: ../common/expidus-notify-log.c:480
 msgid "Do you really want to clear the notification log?"
 msgstr "您真的想要清除通知紀錄嗎？"
 
-#: ../common/xfce-notify-log.c:484
+#: ../common/expidus-notify-log.c:484
 msgid "Clear notification log"
 msgstr "清除通知紀錄"
 
-#: ../common/xfce-notify-log.c:487
+#: ../common/expidus-notify-log.c:487
 msgid "Cancel"
 msgstr "取消"
 
-#: ../common/xfce-notify-log.c:489 ../xfce4-notifyd-config/main.c:964
+#: ../common/expidus-notify-log.c:489 ../expidus1-notifyd-config/main.c:964
 msgid "Clear"
 msgstr "清除"
 
-#: ../common/xfce-notify-log.c:502
+#: ../common/expidus-notify-log.c:502
 msgid "include icon cache"
 msgstr "包含圖示快取"
 
 #: ../panel-plugin/notification-plugin.c:225
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:12
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.desktop.in.h:1
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:12
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.desktop.in.h:1
 msgid "Notifications"
 msgstr "通知"
 
@@ -58,12 +58,12 @@ msgid "Notification Plugin Settings"
 msgstr "通知外掛程式設定"
 
 #: ../panel-plugin/notification-plugin-dialogs.c:80
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:14
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:14
 msgid "_Help"
 msgstr "求助(_H)"
 
 #: ../panel-plugin/notification-plugin-dialogs.c:81
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:15
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:15
 msgid "_Close"
 msgstr "關閉(_C)"
 
@@ -108,276 +108,276 @@ msgid "Notification Plugin"
 msgstr "通知外掛程式"
 
 #: ../panel-plugin/notification-plugin.desktop.in.h:2
-msgid "Notification plugin for the Xfce panel"
-msgstr "Xfce 面板的通知外掛程式"
+msgid "Notification plugin for the Expidus panel"
+msgstr "Expidus 面板的通知外掛程式"
 
-#: ../xfce4-notifyd/main.c:53 ../xfce4-notifyd/main.c:63
-#: ../xfce4-notifyd-config/main.c:809
-msgid "Xfce Notify Daemon"
-msgstr "Xfce 通知幕後程式"
+#: ../expidus1-notifyd/main.c:53 ../expidus1-notifyd/main.c:63
+#: ../expidus1-notifyd-config/main.c:809
+msgid "Expidus Notify Daemon"
+msgstr "Expidus 通知幕後程式"
 
-#: ../xfce4-notifyd/main.c:56
+#: ../expidus1-notifyd/main.c:56
 #, c-format
 msgid "Unknown option \"%s\"\n"
 msgstr "未知選項「%s」\n"
 
-#: ../xfce4-notifyd/main.c:65
+#: ../expidus1-notifyd/main.c:65
 msgid "Unable to start notification daemon"
 msgstr "無法啟動通知幕後程式"
 
-#: ../xfce4-notifyd/xfce-notify-daemon.c:405
+#: ../expidus1-notifyd/expidus-notify-daemon.c:405
 #, c-format
 msgid "Another notification daemon is running, exiting\n"
 msgstr "另一個通知用幕後程式正在執行，結束中\n"
 
-#: ../xfce4-notifyd-config/main.c:78
+#: ../expidus1-notifyd-config/main.c:78
 msgid "Notification Preview"
 msgstr "通知預覽"
 
-#: ../xfce4-notifyd-config/main.c:79
+#: ../expidus1-notifyd-config/main.c:79
 msgid "This is what notifications will look like"
 msgstr "這就是「通知」的樣子"
 
-#: ../xfce4-notifyd-config/main.c:84
+#: ../expidus1-notifyd-config/main.c:84
 msgid "Button"
 msgstr "按鈕"
 
-#: ../xfce4-notifyd-config/main.c:91
+#: ../expidus1-notifyd-config/main.c:91
 msgid "Notification preview failed"
 msgstr "通知預覽失敗"
 
-#: ../xfce4-notifyd-config/main.c:505
+#: ../expidus1-notifyd-config/main.c:505
 #, c-format
 msgid ""
 "<b>Currently only urgent notifications are shown.</b>\n"
 "Notification logging is %s."
 msgstr "<b>目前僅顯示緊急通知。</b>\n通知紀錄為 %s。"
 
-#: ../xfce4-notifyd-config/main.c:512
+#: ../expidus1-notifyd-config/main.c:512
 msgid "enabled"
 msgstr "已啟用"
 
-#: ../xfce4-notifyd-config/main.c:512
+#: ../expidus1-notifyd-config/main.c:512
 msgid "disabled"
 msgstr "已停用"
 
-#: ../xfce4-notifyd-config/main.c:593
+#: ../expidus1-notifyd-config/main.c:593
 msgid "Yesterday and before"
 msgstr "昨天與更早"
 
-#: ../xfce4-notifyd-config/main.c:811
+#: ../expidus1-notifyd-config/main.c:811
 msgid "Settings daemon is unavailable"
 msgstr "設定值幕後程式無法使用"
 
-#: ../xfce4-notifyd-config/main.c:897
+#: ../expidus1-notifyd-config/main.c:897
 msgid ""
 "<big><b>Currently there are no known applications.</b></big>\n"
 "As soon as an application sends a notification\n"
 "it will appear in this list."
 msgstr "<big><b>這裡目前沒有已知的應用程式。</b></big>\n只要應用程式傳送通知，\n它就會在列表中顯示。"
 
-#: ../xfce4-notifyd-config/main.c:942
+#: ../expidus1-notifyd-config/main.c:942
 msgid ""
 "<big><b>Empty log</b></big>\n"
 "No notifications have been logged yet."
 msgstr "<big><b>空白紀錄檔</b></big>\n尚未有已記錄的通知。"
 
-#: ../xfce4-notifyd-config/main.c:950
+#: ../expidus1-notifyd-config/main.c:950
 msgid "Refresh"
 msgstr "重新整理"
 
-#: ../xfce4-notifyd-config/main.c:951
+#: ../expidus1-notifyd-config/main.c:951
 msgid "Refresh the notification log"
 msgstr "重新整理通知紀錄"
 
-#: ../xfce4-notifyd-config/main.c:957
+#: ../expidus1-notifyd-config/main.c:957
 msgid "Open"
 msgstr "開啟"
 
-#: ../xfce4-notifyd-config/main.c:958
+#: ../expidus1-notifyd-config/main.c:958
 msgid "Open the notification log in an external editor"
 msgstr "在外部編輯器中開啟通知紀錄"
 
-#: ../xfce4-notifyd-config/main.c:965
+#: ../expidus1-notifyd-config/main.c:965
 msgid "Clear the notification log"
 msgstr "清除通知紀錄"
 
-#: ../xfce4-notifyd-config/main.c:987
+#: ../expidus1-notifyd-config/main.c:987
 msgid "Display version information"
 msgstr "顯示版本資訊"
 
-#: ../xfce4-notifyd-config/main.c:988
+#: ../expidus1-notifyd-config/main.c:988
 msgid "Settings manager socket"
 msgstr "設定值管理員 socket"
 
-#: ../xfce4-notifyd-config/main.c:988
+#: ../expidus1-notifyd-config/main.c:988
 msgid "SOCKET_ID"
 msgstr "SOCKET_ID"
 
-#: ../xfce4-notifyd-config/main.c:998
+#: ../expidus1-notifyd-config/main.c:998
 #, c-format
 msgid "Type '%s --help' for usage."
 msgstr "輸入 '%s --help' 以瞭解用法。"
 
-#: ../xfce4-notifyd-config/main.c:1013
+#: ../expidus1-notifyd-config/main.c:1013
 #, c-format
 msgid "Released under the terms of the GNU General Public License, version 2\n"
 msgstr "以 GNU General Public License 使用條款發布，第二版\n"
 
-#: ../xfce4-notifyd-config/main.c:1014
+#: ../expidus1-notifyd-config/main.c:1014
 #, c-format
 msgid "Please report bugs to %s.\n"
 msgstr "請回報錯誤至 %s。\n"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:1
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:1
 msgid "only during \"Do not disturb\""
 msgstr "僅當「勿打擾」時"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:2
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:2
 msgid "always"
 msgstr "總是"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:3
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:3
 msgid "all"
 msgstr "所有"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:4
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:4
 msgid "all except blocked"
 msgstr "除了已阻擋的以外的所有"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:5
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:5
 msgid "only blocked"
 msgstr "僅已阻擋"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:6
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:6
 msgid "display with mouse pointer"
 msgstr "顯示滑鼠游標"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:7
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:7
 msgid "primary display"
 msgstr "主要顯示器"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:8
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:8
 msgid "Top left"
 msgstr "左上方"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:9
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:9
 msgid "Bottom left"
 msgstr "左下方"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:10
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:10
 msgid "Top right"
 msgstr "右上方"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:11
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:11
 msgid "Bottom right"
 msgstr "右下方"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:13
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:13
 msgid "Customize your notification settings"
 msgstr "自訂您的通知設定"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:16
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:16
 msgid ""
 "The notification service is not running. No notifications will be shown."
 msgstr "通知服務未執行。將不會顯示通知。"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:17
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:17
 msgid "<b>Currently only urgent notifications are shown.</b>"
 msgstr "<b>目前僅會顯示緊急通知。</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:18
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:18
 msgid "Show _Preview"
 msgstr "顯示預覽(_P)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:19
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:19
 msgid "seconds"
 msgstr "秒"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:20
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:20
 msgid "_Disappear after"
 msgstr "多久後消失(_D)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:21
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:21
 msgid "_Opacity"
 msgstr "不透明度(_O)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:22
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:22
 msgid "Fade out"
 msgstr "淡出"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:23
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:23
 msgid "_Slide out"
 msgstr "滑出(_S)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:24
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:24
 msgid "Default _position"
 msgstr "預設位置(_P)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:25
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:25
 msgid "_Theme"
 msgstr "主題(_T)"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:26
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:26
 msgid "Do not disturb"
 msgstr "勿打擾"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:27
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:27
 msgid "<b>Behavior</b>"
 msgstr "<b>行為</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:28
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:28
 msgid "<b>Appearance</b>"
 msgstr "<b>外觀</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:29
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:29
 msgid "<b>Animations</b>"
 msgstr "<b>動畫</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:30
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:30
 msgid ""
 "By default the notification bubbles will be shown on the display on which "
 "the mouse pointer is located."
 msgstr "預設情況下，通知氣泡將會在您滑鼠游標停留的螢幕上顯示。"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:31
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:31
 msgid "Show notifications on"
 msgstr "顯示通知在"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:32
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:32
 msgid "General"
 msgstr "一般"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:33
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:33
 msgid "<b>Show or block notifications per application</b>"
 msgstr "<b>顯示或阻擋每個應用程式的通知</b>"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:34
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:34
 msgid "Applications"
 msgstr "應用程式"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:35
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:35
 msgid "Log notifications"
 msgstr "記錄通知"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:36
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:36
 msgid "Log applications"
 msgstr "記錄應用程式"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:37
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:37
 msgid "Log size limit"
 msgstr "紀錄檔大小限制"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:38
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:38
 msgid ""
 "The maximum amount of entries to be retained in the log. Please note that a "
 "large log may lead to performance penalties. 0 means no limit."
 msgstr "紀錄檔中保留的最大項目數。請注意，太大的紀錄檔可能會導致效能下降。0 代表無限制。"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.glade.h:39
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.glade.h:39
 msgid "Log"
 msgstr "記錄"
 
-#: ../xfce4-notifyd-config/xfce4-notifyd-config.desktop.in.h:2
+#: ../expidus1-notifyd-config/expidus1-notifyd-config.desktop.in.h:2
 msgid "Customize how notifications appear on your screen"
 msgstr "自訂通知該如何在您螢幕上顯示"

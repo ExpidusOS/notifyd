@@ -1,7 +1,7 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
- *  Copyright (c) 2016 Simon Steinbeiß <ochosi@xfce.org>
+ *  Copyright (c) 2016 Simon Steinbeiß <ochosi@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,13 +29,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <gdk/gdkx.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include "xfce-notify-log.h"
+#include "expidus-notify-log.h"
 
 GdkPixbuf *
 notify_pixbuf_from_image_data (GVariant *image_data)
@@ -88,34 +88,34 @@ notify_icon_name_from_desktop_id (const gchar *desktop_id)
 {
     gchar *icon_file = NULL;
     gchar *resource;
-    XfceRc *rcfile;
+    ExpidusRc *rcfile;
 
     resource = g_strdup_printf("applications%c%s.desktop",
                                G_DIR_SEPARATOR,
                                desktop_id);
-    rcfile = xfce_rc_config_open(XFCE_RESOURCE_DATA,
+    rcfile = expidus_rc_config_open(EXPIDUS_RESOURCE_DATA,
                                  resource, TRUE);
     g_free (resource);
     if (rcfile)
     {
-        if (xfce_rc_has_group (rcfile, "Desktop Entry"))
+        if (expidus_rc_has_group (rcfile, "Desktop Entry"))
         {
-            xfce_rc_set_group (rcfile, "Desktop Entry");
-            icon_file = g_strdup (xfce_rc_read_entry (rcfile, "Icon", NULL));
+            expidus_rc_set_group (rcfile, "Desktop Entry");
+            icon_file = g_strdup (expidus_rc_read_entry (rcfile, "Icon", NULL));
             /* At this point: icon_file might be NULL */
         }
-        xfce_rc_close (rcfile);
+        expidus_rc_close (rcfile);
     }
     return icon_file;
 }
 
 GKeyFile *
-xfce_notify_log_get (void)
+expidus_notify_log_get (void)
 {
     GKeyFile *notify_log;
     gchar *notify_log_path = NULL;
 
-    notify_log_path = xfce_resource_lookup (XFCE_RESOURCE_CACHE, XFCE_NOTIFY_LOG_FILE);
+    notify_log_path = expidus_resource_lookup (EXPIDUS_RESOURCE_CACHE, EXPIDUS_NOTIFY_LOG_FILE);
 
     if (notify_log_path)
     {
@@ -131,7 +131,7 @@ xfce_notify_log_get (void)
 }
 
 static void
-xfce_notify_log_keyfile_insert1 (GKeyFile *notify_log,
+expidus_notify_log_keyfile_insert1 (GKeyFile *notify_log,
                                  const gchar *app_name,
                                  const gchar *summary,
                                  const gchar *body,
@@ -150,8 +150,8 @@ xfce_notify_log_keyfile_insert1 (GKeyFile *notify_log,
     gchar *timestamp;
     gchar *notify_log_icon_folder;
 
-    notify_log_icon_folder = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                         XFCE_NOTIFY_ICON_PATH, TRUE);
+    notify_log_icon_folder = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                         EXPIDUS_NOTIFY_ICON_PATH, TRUE);
 
     now = g_date_time_new_now_local ();
     timestamp = g_date_time_format_iso8601 (now);
@@ -185,7 +185,7 @@ xfce_notify_log_keyfile_insert1 (GKeyFile *notify_log,
     }
     else if (image_path) {
         /* If the image path is in the tmp directory we copy it to the cache directory to make it persistent
-           (e.g. Chrome/Chromium uses the tmp directory to store and reference icons, see https://bugzilla.xfce.org/show_bug.cgi?id=15215)*/
+           (e.g. Chrome/Chromium uses the tmp directory to store and reference icons, see https://bugzilla.expidus.org/show_bug.cgi?id=15215)*/
         gchar *image_dir = g_path_get_dirname (image_path);
         if (g_strcmp0 ("/tmp", image_dir) == 0) {
             gchar *image_data = NULL;
@@ -245,7 +245,7 @@ xfce_notify_log_keyfile_insert1 (GKeyFile *notify_log,
     g_free (notify_log_icon_folder);
 }
 
-void xfce_notify_log_insert (const gchar *app_name,
+void expidus_notify_log_insert (const gchar *app_name,
                              const gchar *summary,
                              const gchar *body,
                              GVariant *image_data,
@@ -258,8 +258,8 @@ void xfce_notify_log_insert (const gchar *app_name,
 {
     gchar *notify_log_path;
 
-    notify_log_path = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                   XFCE_NOTIFY_LOG_FILE, TRUE);
+    notify_log_path = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                   EXPIDUS_NOTIFY_LOG_FILE, TRUE);
 
     if (notify_log_path)
     {
@@ -311,7 +311,7 @@ void xfce_notify_log_insert (const gchar *app_name,
                         }
                     }
 
-                    xfce_notify_log_keyfile_insert1 (notify_log, app_name, summary, body, image_data, image_path, app_icon, desktop_id, expire_timeout, actions);
+                    expidus_notify_log_keyfile_insert1 (notify_log, app_name, summary, body, image_data, image_path, app_icon, desktop_id, expire_timeout, actions);
 
                     g_key_file_save_to_file (notify_log, notify_log_path, NULL);
                     goto cleanup;
@@ -327,7 +327,7 @@ void xfce_notify_log_insert (const gchar *app_name,
         }
 
         notify_log = g_key_file_new ();
-        xfce_notify_log_keyfile_insert1 (notify_log, app_name, summary, body, image_data, image_path, app_icon, desktop_id, expire_timeout, actions);
+        expidus_notify_log_keyfile_insert1 (notify_log, app_name, summary, body, image_data, image_path, app_icon, desktop_id, expire_timeout, actions);
         data = g_key_file_to_data (notify_log, &length, NULL);
         if (data)
         {
@@ -369,12 +369,12 @@ void xfce_notify_log_insert (const gchar *app_name,
 
 /* Returns NULL if unable to determine the icon cache size */
 static gchar *
-xfce_notify_get_icon_cache_size (void)
+expidus_notify_get_icon_cache_size (void)
 {
     gchar *notify_icon_cache_path;
 
-    notify_icon_cache_path = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                          XFCE_NOTIFY_ICON_PATH, FALSE);
+    notify_icon_cache_path = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                          EXPIDUS_NOTIFY_ICON_PATH, FALSE);
     if (notify_icon_cache_path)
     {
         GFile *icon_folder;
@@ -403,12 +403,12 @@ xfce_notify_get_icon_cache_size (void)
     return NULL;
 }
 
-void xfce_notify_clear_icon_cache (void)
+void expidus_notify_clear_icon_cache (void)
 {
     gchar *notify_icon_cache_path = NULL;
 
-    notify_icon_cache_path = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                          XFCE_NOTIFY_ICON_PATH, FALSE);
+    notify_icon_cache_path = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                          EXPIDUS_NOTIFY_ICON_PATH, FALSE);
 
     if (notify_icon_cache_path)
     {
@@ -445,12 +445,12 @@ void xfce_notify_clear_icon_cache (void)
     }
 }
 
-void xfce_notify_log_clear (void)
+void expidus_notify_log_clear (void)
 {
     gchar *notify_log_path = NULL;
 
-    notify_log_path = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                   XFCE_NOTIFY_LOG_FILE, FALSE);
+    notify_log_path = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                   EXPIDUS_NOTIFY_LOG_FILE, FALSE);
 
     if (notify_log_path)
     {
@@ -464,7 +464,7 @@ void xfce_notify_log_clear (void)
 }
 
 static void
-xfce_notify_clear_log_dialog_cb (GtkWidget *dialog, gint response, gpointer user_data)
+expidus_notify_clear_log_dialog_cb (GtkWidget *dialog, gint response, gpointer user_data)
 {
     GtkWidget *checkbutton = user_data;
     gboolean active;
@@ -475,15 +475,15 @@ xfce_notify_clear_log_dialog_cb (GtkWidget *dialog, gint response, gpointer user
         response == GTK_RESPONSE_CANCEL)
         return;
     else if (active) {
-        xfce_notify_clear_icon_cache ();
-        xfce_notify_log_clear ();
+        expidus_notify_clear_icon_cache ();
+        expidus_notify_log_clear ();
     }
     else {
-        xfce_notify_log_clear ();
+        expidus_notify_log_clear ();
     }
 }
 
-GtkWidget *xfce_notify_clear_log_dialog (void)
+GtkWidget *expidus_notify_clear_log_dialog (void)
 {
     GtkWidget *dialog, *grid, *icon, *label, *content_area, *checkbutton;
     GtkDialogFlags flags = GTK_DIALOG_MODAL;
@@ -510,7 +510,7 @@ GtkWidget *xfce_notify_clear_log_dialog (void)
 
     icon = gtk_image_new_from_icon_name ("edit-clear", GTK_ICON_SIZE_DIALOG);
 
-    icon_cache_size = xfce_notify_get_icon_cache_size ();
+    icon_cache_size = expidus_notify_get_icon_cache_size ();
     if (icon_cache_size)
     {
         gchar *message = g_strdup_printf ("%s (%s)", _("include icon cache"), icon_cache_size);
@@ -536,7 +536,7 @@ GtkWidget *xfce_notify_clear_log_dialog (void)
     gtk_widget_show_all (dialog);
 
     g_signal_connect (dialog, "response",
-                      G_CALLBACK (xfce_notify_clear_log_dialog_cb),
+                      G_CALLBACK (expidus_notify_clear_log_dialog_cb),
                       checkbutton);
     gtk_window_set_icon_name (GTK_WINDOW (dialog), "edit-clear");
 

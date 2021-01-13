@@ -1,9 +1,9 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
  *  Copyright (c) 2008-2009 Brian Tarricone <bjt23@cornell.edu>
- *  Copyright (c) 2009 Jérôme Guelfucci <jeromeg@xfce.org>
- *  Copyright (c) 2015 Ali Abdallah    <ali@xfce.org>
+ *  Copyright (c) 2009 Jérôme Guelfucci <jeromeg@expidus.org>
+ *  Copyright (c) 2015 Ali Abdallah    <ali@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@
 
 #include <math.h>
 
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
-#include "xfce-notify-window.h"
-#include "xfce-notify-enum-types.h"
+#include "expidus-notify-window.h"
+#include "expidus-notify-enum-types.h"
 
 #define DEFAULT_EXPIRE_TIMEOUT 10000
 #define DEFAULT_NORMAL_OPACITY 0.85
@@ -42,10 +42,10 @@
 #define FADE_CHANGE_TIMEOUT    50
 #define DEFAULT_RADIUS         10
 #define DEFAULT_PADDING        14.0
-#define BASE_CSS               ".xfce4-notifyd { font-size: initial; }"
-#define NO_COMPOSITING_CSS     ".xfce4-notifyd { border-radius: 0px; }"
+#define BASE_CSS               ".expidus1-notifyd { font-size: initial; }"
+#define NO_COMPOSITING_CSS     ".expidus1-notifyd { border-radius: 0px; }"
 
-struct _XfceNotifyWindow
+struct _ExpidusNotifyWindow
 {
     GtkWindow parent;
 
@@ -87,11 +87,11 @@ typedef struct
     GtkWindowClass parent;
 
     /*< signals >*/
-    void (*closed)(XfceNotifyWindow *window,
-                   XfceNotifyCloseReason reason);
-    void (*action_invoked)(XfceNotifyWindow *window,
+    void (*closed)(ExpidusNotifyWindow *window,
+                   ExpidusNotifyCloseReason reason);
+    void (*action_invoked)(ExpidusNotifyWindow *window,
                            const gchar *action_id);
-} XfceNotifyWindowClass;
+} ExpidusNotifyWindowClass;
 
 enum
 {
@@ -100,61 +100,61 @@ enum
     N_SIGS,
 };
 
-static void xfce_notify_window_finalize(GObject *object);
+static void expidus_notify_window_finalize(GObject *object);
 
-static void xfce_notify_window_realize(GtkWidget *widget);
-static void xfce_notify_window_unrealize(GtkWidget *widget);
-static gboolean xfce_notify_window_draw (GtkWidget *widget,
+static void expidus_notify_window_realize(GtkWidget *widget);
+static void expidus_notify_window_unrealize(GtkWidget *widget);
+static gboolean expidus_notify_window_draw (GtkWidget *widget,
                                          cairo_t *cr);
-static gboolean xfce_notify_window_enter_leave(GtkWidget *widget,
+static gboolean expidus_notify_window_enter_leave(GtkWidget *widget,
                                                GdkEventCrossing *evt);
-static gboolean xfce_notify_window_button_release(GtkWidget *widget,
+static gboolean expidus_notify_window_button_release(GtkWidget *widget,
                                                   GdkEventButton *evt);
-static gboolean xfce_notify_window_configure_event(GtkWidget *widget,
+static gboolean expidus_notify_window_configure_event(GtkWidget *widget,
                                                    GdkEventConfigure *evt);
-static gboolean xfce_notify_window_expire_timeout(gpointer data);
-static gboolean xfce_notify_window_fade_timeout(gpointer data);
+static gboolean expidus_notify_window_expire_timeout(gpointer data);
+static gboolean expidus_notify_window_fade_timeout(gpointer data);
 
-static void xfce_notify_window_button_clicked(GtkWidget *widget,
+static void expidus_notify_window_button_clicked(GtkWidget *widget,
                                               gpointer user_data);
 
 static guint signals[N_SIGS] = { 0, };
 
 
-G_DEFINE_TYPE(XfceNotifyWindow, xfce_notify_window, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE(ExpidusNotifyWindow, expidus_notify_window, GTK_TYPE_WINDOW)
 
 
 static void
-xfce_notify_window_class_init(XfceNotifyWindowClass *klass)
+expidus_notify_window_class_init(ExpidusNotifyWindowClass *klass)
 {
     GObjectClass *gobject_class = (GObjectClass *)klass;
     GtkWidgetClass *widget_class = (GtkWidgetClass *)klass;
 
-    gobject_class->finalize = xfce_notify_window_finalize;
+    gobject_class->finalize = expidus_notify_window_finalize;
 
-    widget_class->realize = xfce_notify_window_realize;
-    widget_class->unrealize = xfce_notify_window_unrealize;
+    widget_class->realize = expidus_notify_window_realize;
+    widget_class->unrealize = expidus_notify_window_unrealize;
 
-    widget_class->draw = xfce_notify_window_draw;
-    widget_class->enter_notify_event = xfce_notify_window_enter_leave;
-    widget_class->leave_notify_event = xfce_notify_window_enter_leave;
-    widget_class->button_release_event = xfce_notify_window_button_release;
-    widget_class->configure_event = xfce_notify_window_configure_event;
+    widget_class->draw = expidus_notify_window_draw;
+    widget_class->enter_notify_event = expidus_notify_window_enter_leave;
+    widget_class->leave_notify_event = expidus_notify_window_enter_leave;
+    widget_class->button_release_event = expidus_notify_window_button_release;
+    widget_class->configure_event = expidus_notify_window_configure_event;
 
     signals[SIG_CLOSED] = g_signal_new("closed",
-                                       XFCE_TYPE_NOTIFY_WINDOW,
+                                       EXPIDUS_TYPE_NOTIFY_WINDOW,
                                        G_SIGNAL_RUN_LAST,
-                                       G_STRUCT_OFFSET(XfceNotifyWindowClass,
+                                       G_STRUCT_OFFSET(ExpidusNotifyWindowClass,
                                                        closed),
                                        NULL, NULL,
                                        g_cclosure_marshal_VOID__ENUM,
                                        G_TYPE_NONE, 1,
-                                       XFCE_TYPE_NOTIFY_CLOSE_REASON);
+                                       EXPIDUS_TYPE_NOTIFY_CLOSE_REASON);
 
     signals[SIG_ACTION_INVOKED] = g_signal_new("action-invoked",
-                                               XFCE_TYPE_NOTIFY_WINDOW,
+                                               EXPIDUS_TYPE_NOTIFY_WINDOW,
                                                G_SIGNAL_RUN_LAST,
-                                               G_STRUCT_OFFSET(XfceNotifyWindowClass,
+                                               G_STRUCT_OFFSET(ExpidusNotifyWindowClass,
                                                                action_invoked),
                                                NULL, NULL,
                                                g_cclosure_marshal_VOID__STRING,
@@ -172,7 +172,7 @@ xfce_notify_window_class_init(XfceNotifyWindowClass *klass)
 }
 
 static void
-xfce_notify_window_init(XfceNotifyWindow *window)
+expidus_notify_window_init(ExpidusNotifyWindow *window)
 {
     GdkScreen *screen;
     GtkWidget *topvbox, *tophbox, *vbox;
@@ -189,7 +189,7 @@ xfce_notify_window_init(XfceNotifyWindow *window)
     window->do_fadeout = DEFAULT_DO_FADEOUT;
     window->do_slideout = DEFAULT_DO_SLIDEOUT;
 
-    gtk_widget_set_name (GTK_WIDGET(window), "XfceNotifyWindow");
+    gtk_widget_set_name (GTK_WIDGET(window), "ExpidusNotifyWindow");
     gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
     gtk_window_stick(GTK_WINDOW(window));
     gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
@@ -292,7 +292,7 @@ xfce_notify_window_init(XfceNotifyWindow *window)
     gtk_box_set_homogeneous (GTK_BOX(window->button_box), FALSE);
     gtk_box_pack_end (GTK_BOX(topvbox), window->button_box, FALSE, FALSE, 0);
 
-    gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (window)), "xfce4-notifyd");
+    gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (window)), "expidus1-notifyd");
     provider = gtk_css_provider_new ();
     gtk_css_provider_load_from_data (provider, BASE_CSS, -1, NULL);
     gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (window)),
@@ -302,7 +302,7 @@ xfce_notify_window_init(XfceNotifyWindow *window)
 }
 
 static void
-xfce_notify_window_start_expiration(XfceNotifyWindow *window)
+expidus_notify_window_start_expiration(ExpidusNotifyWindow *window)
 {
     if(window->expire_timeout) {
         gint64 ct;
@@ -323,35 +323,35 @@ xfce_notify_window_start_expiration(XfceNotifyWindow *window)
 
         window->expire_start_timestamp = ct / 1000;
         window->expire_id = g_timeout_add(timeout,
-                                          xfce_notify_window_expire_timeout,
+                                          expidus_notify_window_expire_timeout,
                                           window);
     }
     gtk_widget_set_opacity(GTK_WIDGET(window), window->normal_opacity);
 }
 
 static void
-xfce_notify_window_finalize(GObject *object)
+expidus_notify_window_finalize(GObject *object)
 {
-    G_OBJECT_CLASS(xfce_notify_window_parent_class)->finalize(object);
+    G_OBJECT_CLASS(expidus_notify_window_parent_class)->finalize(object);
 }
 
 static void
-xfce_notify_window_realize(GtkWidget *widget)
+expidus_notify_window_realize(GtkWidget *widget)
 {
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW(widget);
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW(widget);
 
-    GTK_WIDGET_CLASS(xfce_notify_window_parent_class)->realize(widget);
+    GTK_WIDGET_CLASS(expidus_notify_window_parent_class)->realize(widget);
 
     gdk_window_set_type_hint(gtk_widget_get_window(widget),
                              GDK_WINDOW_TYPE_HINT_NOTIFICATION);
     gdk_window_set_override_redirect(gtk_widget_get_window(widget), TRUE);
-    xfce_notify_window_start_expiration(window);
+    expidus_notify_window_start_expiration(window);
 }
 
 static void
-xfce_notify_window_unrealize(GtkWidget *widget)
+expidus_notify_window_unrealize(GtkWidget *widget)
 {
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW(widget);
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW(widget);
 
     if(window->fade_id) {
         g_source_remove(window->fade_id);
@@ -363,12 +363,12 @@ xfce_notify_window_unrealize(GtkWidget *widget)
         window->expire_id = 0;
     }
 
-    GTK_WIDGET_CLASS(xfce_notify_window_parent_class)->unrealize(widget);
+    GTK_WIDGET_CLASS(expidus_notify_window_parent_class)->unrealize(widget);
 
 }
 
 static gboolean
-xfce_notify_window_draw (GtkWidget *widget,
+expidus_notify_window_draw (GtkWidget *widget,
                          cairo_t *cr)
 {
     GtkStyleContext  *context;
@@ -376,7 +376,7 @@ xfce_notify_window_draw (GtkWidget *widget,
     GdkScreen        *screen;
     GtkCssProvider   *provider;
     GtkStateFlags     state;
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW (widget);
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW (widget);
 
     state = GTK_STATE_FLAG_NORMAL;
     if (window->mouse_hover)
@@ -406,16 +406,16 @@ xfce_notify_window_draw (GtkWidget *widget,
     gtk_render_frame (context, cr, allocation.x, allocation.y, allocation.width, allocation.height);
 
     /* Then draw the rest of the window */
-    GTK_WIDGET_CLASS (xfce_notify_window_parent_class)->draw (widget, cr);
+    GTK_WIDGET_CLASS (expidus_notify_window_parent_class)->draw (widget, cr);
 
     return FALSE;
 }
 
 static gboolean
-xfce_notify_window_enter_leave(GtkWidget *widget,
+expidus_notify_window_enter_leave(GtkWidget *widget,
                                GdkEventCrossing *evt)
 {
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW(widget);
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW(widget);
 
     if(evt->type == GDK_ENTER_NOTIFY) {
         if(window->expire_timeout) {
@@ -437,7 +437,7 @@ xfce_notify_window_enter_leave(GtkWidget *widget,
     } else if(evt->type == GDK_LEAVE_NOTIFY
               && evt->detail != GDK_NOTIFY_INFERIOR)
     {
-        xfce_notify_window_start_expiration(window);
+        expidus_notify_window_start_expiration(window);
         window->mouse_hover = FALSE;
         gtk_widget_queue_draw(widget);
     }
@@ -446,22 +446,22 @@ xfce_notify_window_enter_leave(GtkWidget *widget,
 }
 
 static gboolean
-xfce_notify_window_button_release(GtkWidget *widget,
+expidus_notify_window_button_release(GtkWidget *widget,
                                   GdkEventButton *evt)
 {
     g_signal_emit(G_OBJECT(widget), signals[SIG_CLOSED], 0,
-                  XFCE_NOTIFY_CLOSE_REASON_DISMISSED);
+                  EXPIDUS_NOTIFY_CLOSE_REASON_DISMISSED);
 
     return FALSE;
 }
 
 static gboolean
-xfce_notify_window_configure_event(GtkWidget *widget,
+expidus_notify_window_configure_event(GtkWidget *widget,
                                    GdkEventConfigure *evt)
 {
     gboolean ret;
 
-    ret = GTK_WIDGET_CLASS(xfce_notify_window_parent_class)->configure_event(widget,
+    ret = GTK_WIDGET_CLASS(expidus_notify_window_parent_class)->configure_event(widget,
                                                                              evt);
 
     gtk_widget_queue_draw(widget);
@@ -472,13 +472,13 @@ xfce_notify_window_configure_event(GtkWidget *widget,
 
 
 static gboolean
-xfce_notify_window_expire_timeout(gpointer data)
+expidus_notify_window_expire_timeout(gpointer data)
 {
-    XfceNotifyWindow *window = data;
+    ExpidusNotifyWindow *window = data;
     gboolean          fade_transparent;
     gint              animation_timeout;
 
-    g_return_val_if_fail(XFCE_IS_NOTIFY_WINDOW(data), FALSE);
+    g_return_val_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(data), FALSE);
 
     window->expire_id = 0;
 
@@ -494,25 +494,25 @@ xfce_notify_window_expire_timeout(gpointer data)
         else
             animation_timeout = FADE_CHANGE_TIMEOUT;
         window->fade_id = g_timeout_add(animation_timeout,
-                                        xfce_notify_window_fade_timeout,
+                                        expidus_notify_window_fade_timeout,
                                         window);
     } else {
         /* it might be 800ms early, but that's ok */
         g_signal_emit(G_OBJECT(window), signals[SIG_CLOSED], 0,
-                      XFCE_NOTIFY_CLOSE_REASON_EXPIRED);
+                      EXPIDUS_NOTIFY_CLOSE_REASON_EXPIRED);
     }
 
     return FALSE;
 }
 
 static gboolean
-xfce_notify_window_fade_timeout(gpointer data)
+expidus_notify_window_fade_timeout(gpointer data)
 {
-    XfceNotifyWindow *window = data;
+    ExpidusNotifyWindow *window = data;
     gdouble op;
     gint x, y;
 
-    g_return_val_if_fail(XFCE_IS_NOTIFY_WINDOW(data), FALSE);
+    g_return_val_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(data), FALSE);
 
     /* slide out animation */
     if (window->do_slideout) {
@@ -539,7 +539,7 @@ xfce_notify_window_fade_timeout(gpointer data)
     if(op <= 0.0001) {
         window->fade_id = 0;
         g_signal_emit(G_OBJECT(window), signals[SIG_CLOSED], 0,
-                      XFCE_NOTIFY_CLOSE_REASON_EXPIRED);
+                      EXPIDUS_NOTIFY_CLOSE_REASON_EXPIRED);
         return FALSE;
     }
 
@@ -547,15 +547,15 @@ xfce_notify_window_fade_timeout(gpointer data)
 }
 
 static void
-xfce_notify_window_button_clicked(GtkWidget *widget,
+expidus_notify_window_button_clicked(GtkWidget *widget,
                                   gpointer user_data)
 {
-    XfceNotifyWindow *window;
+    ExpidusNotifyWindow *window;
     gchar *action_id;
 
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(user_data));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(user_data));
 
-    window = XFCE_NOTIFY_WINDOW(user_data);
+    window = EXPIDUS_NOTIFY_WINDOW(user_data);
 
     action_id = g_object_get_data(G_OBJECT(widget), "--action-id");
     g_assert(action_id);
@@ -563,22 +563,22 @@ xfce_notify_window_button_clicked(GtkWidget *widget,
     g_signal_emit(G_OBJECT(window), signals[SIG_ACTION_INVOKED], 0,
                   action_id);
     g_signal_emit(G_OBJECT(window), signals[SIG_CLOSED], 0,
-                  XFCE_NOTIFY_CLOSE_REASON_DISMISSED);
+                  EXPIDUS_NOTIFY_CLOSE_REASON_DISMISSED);
 }
 
 GtkWidget *
-xfce_notify_window_new(void)
+expidus_notify_window_new(void)
 {
-    return xfce_notify_window_new_with_actions(NULL, NULL, NULL, -1, NULL, NULL);
+    return expidus_notify_window_new_with_actions(NULL, NULL, NULL, -1, NULL, NULL);
 }
 
 GtkWidget *
-xfce_notify_window_new_full(const gchar *summary,
+expidus_notify_window_new_full(const gchar *summary,
                             const gchar *body,
                             const gchar *icon_name,
                             gint expire_timeout)
 {
-    return xfce_notify_window_new_with_actions(summary, body,
+    return expidus_notify_window_new_with_actions(summary, body,
                                                icon_name,
                                                expire_timeout,
                                                NULL,
@@ -586,32 +586,32 @@ xfce_notify_window_new_full(const gchar *summary,
 }
 
 GtkWidget *
-xfce_notify_window_new_with_actions(const gchar *summary,
+expidus_notify_window_new_with_actions(const gchar *summary,
                                     const gchar *body,
                                     const gchar *icon_name,
                                     gint expire_timeout,
                                     const gchar **actions,
                                     GtkCssProvider *css_provider)
 {
-    XfceNotifyWindow *window;
+    ExpidusNotifyWindow *window;
 
-    window = g_object_new(XFCE_TYPE_NOTIFY_WINDOW,
+    window = g_object_new(EXPIDUS_TYPE_NOTIFY_WINDOW,
                           "type", GTK_WINDOW_TOPLEVEL, NULL);
 
-    xfce_notify_window_set_summary(window, summary);
-    xfce_notify_window_set_body(window, body);
-    xfce_notify_window_set_icon_name(window, icon_name);
-    xfce_notify_window_set_expire_timeout(window, expire_timeout);
-    xfce_notify_window_set_actions(window, actions, css_provider);
+    expidus_notify_window_set_summary(window, summary);
+    expidus_notify_window_set_body(window, body);
+    expidus_notify_window_set_icon_name(window, icon_name);
+    expidus_notify_window_set_expire_timeout(window, expire_timeout);
+    expidus_notify_window_set_actions(window, actions, css_provider);
 
     return GTK_WIDGET(window);
 }
 
 void
-xfce_notify_window_set_summary(XfceNotifyWindow *window,
+expidus_notify_window_set_summary(ExpidusNotifyWindow *window,
                                const gchar *summary)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     gtk_label_set_text(GTK_LABEL(window->summary), summary);
     if(summary && *summary) {
@@ -627,10 +627,10 @@ xfce_notify_window_set_summary(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_body(XfceNotifyWindow *window,
+expidus_notify_window_set_body(ExpidusNotifyWindow *window,
                             const gchar *body)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     if(body && *body) {
         /* Try to set the body with markup and in case this fails (empty label)
@@ -657,38 +657,38 @@ xfce_notify_window_set_body(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_geometry(XfceNotifyWindow *window,
+expidus_notify_window_set_geometry(ExpidusNotifyWindow *window,
                                 GdkRectangle rectangle)
 {
     window->geometry = rectangle;
 }
 
 GdkRectangle *
-xfce_notify_window_get_geometry (XfceNotifyWindow *window)
+expidus_notify_window_get_geometry (ExpidusNotifyWindow *window)
 {
    return &window->geometry;
 }
 
 void
-xfce_notify_window_set_last_monitor(XfceNotifyWindow *window,
+expidus_notify_window_set_last_monitor(ExpidusNotifyWindow *window,
                                     gint monitor)
 {
     window->last_monitor = monitor;
 }
 
 gint
-xfce_notify_window_get_last_monitor(XfceNotifyWindow *window)
+expidus_notify_window_get_last_monitor(ExpidusNotifyWindow *window)
 {
    return window->last_monitor;
 }
 
 void
-xfce_notify_window_set_icon_name (XfceNotifyWindow *window,
+expidus_notify_window_set_icon_name (ExpidusNotifyWindow *window,
                                   const gchar *icon_name)
 {
     gboolean icon_set = FALSE;
 
-    g_return_if_fail (XFCE_IS_NOTIFY_WINDOW (window));
+    g_return_if_fail (EXPIDUS_IS_NOTIFY_WINDOW (window));
 
     if (icon_name && *icon_name) {
         gint w, h;
@@ -731,12 +731,12 @@ xfce_notify_window_set_icon_name (XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_icon_pixbuf(XfceNotifyWindow *window,
+expidus_notify_window_set_icon_pixbuf(ExpidusNotifyWindow *window,
                                    GdkPixbuf *pixbuf)
 {
     GdkPixbuf *p_free = NULL;
 
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window)
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window)
                      && (!pixbuf || GDK_IS_PIXBUF(pixbuf)));
 
     if(pixbuf) {
@@ -779,10 +779,10 @@ xfce_notify_window_set_icon_pixbuf(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_expire_timeout(XfceNotifyWindow *window,
+expidus_notify_window_set_expire_timeout(ExpidusNotifyWindow *window,
                                       gint expire_timeout)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     if(expire_timeout >= 0)
         window->expire_timeout = expire_timeout;
@@ -800,19 +800,19 @@ xfce_notify_window_set_expire_timeout(XfceNotifyWindow *window,
         }
         gtk_widget_set_opacity(GTK_WIDGET(window), window->normal_opacity);
 
-        xfce_notify_window_start_expiration (window);
+        expidus_notify_window_start_expiration (window);
     }
 }
 
 void
-xfce_notify_window_set_actions(XfceNotifyWindow *window,
+expidus_notify_window_set_actions(ExpidusNotifyWindow *window,
                                const gchar **actions,
                                GtkCssProvider *css_provider)
 {
     gint i;
     GList *children, *l;
 
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     children = gtk_container_get_children(GTK_CONTAINER(window->button_box));
     for(l = children; l; l = l->next)
@@ -855,7 +855,7 @@ xfce_notify_window_set_actions(XfceNotifyWindow *window,
         gtk_widget_set_margin_top (btn, padding / 2);
         gtk_container_add(GTK_CONTAINER(window->button_box), btn);
         g_signal_connect(G_OBJECT(btn), "clicked",
-                         G_CALLBACK(xfce_notify_window_button_clicked),
+                         G_CALLBACK(expidus_notify_window_button_clicked),
                          window);
 
         cur_button_text_escaped = g_markup_printf_escaped("<span size='small'>%s</span>",
@@ -878,10 +878,10 @@ xfce_notify_window_set_actions(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_opacity(XfceNotifyWindow *window,
+expidus_notify_window_set_opacity(ExpidusNotifyWindow *window,
                                gdouble opacity)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     if(opacity > 1.0)
         opacity = 1.0;
@@ -897,17 +897,17 @@ xfce_notify_window_set_opacity(XfceNotifyWindow *window,
 }
 
 gdouble
-xfce_notify_window_get_opacity(XfceNotifyWindow *window)
+expidus_notify_window_get_opacity(ExpidusNotifyWindow *window)
 {
-    g_return_val_if_fail(XFCE_IS_NOTIFY_WINDOW(window), 0.0);
+    g_return_val_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window), 0.0);
     return window->normal_opacity;
 }
 
 void
-xfce_notify_window_set_icon_only(XfceNotifyWindow *window,
+expidus_notify_window_set_icon_only(ExpidusNotifyWindow *window,
                                  gboolean icon_only)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     if(icon_only == window->icon_only)
         return;
@@ -942,11 +942,11 @@ xfce_notify_window_set_icon_only(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_set_gauge_value(XfceNotifyWindow *window,
+expidus_notify_window_set_gauge_value(ExpidusNotifyWindow *window,
                                    gint value,
                                    GtkCssProvider *css_provider)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     /* maybe want to do some kind of effect if the value is out of bounds */
     if(value > 100)
@@ -994,9 +994,9 @@ xfce_notify_window_set_gauge_value(XfceNotifyWindow *window,
 }
 
 void
-xfce_notify_window_unset_gauge_value(XfceNotifyWindow *window)
+expidus_notify_window_unset_gauge_value(ExpidusNotifyWindow *window)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     if(window->gauge) {
         GtkWidget *align = gtk_widget_get_parent(window->gauge);
@@ -1016,31 +1016,31 @@ xfce_notify_window_unset_gauge_value(XfceNotifyWindow *window)
 }
 
 void
-xfce_notify_window_set_do_fadeout(XfceNotifyWindow *window,
+expidus_notify_window_set_do_fadeout(ExpidusNotifyWindow *window,
                                   gboolean do_fadeout,
                                   gboolean do_slideout)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     window->do_fadeout = do_fadeout;
     window->do_slideout = do_slideout;
 }
 
-void xfce_notify_window_set_notify_location(XfceNotifyWindow *window,
+void expidus_notify_window_set_notify_location(ExpidusNotifyWindow *window,
                                             GtkCornerType notify_location)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window));
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window));
 
     window->notify_location = notify_location;
 }
 
 void
-xfce_notify_window_closed(XfceNotifyWindow *window,
-                          XfceNotifyCloseReason reason)
+expidus_notify_window_closed(ExpidusNotifyWindow *window,
+                          ExpidusNotifyCloseReason reason)
 {
-    g_return_if_fail(XFCE_IS_NOTIFY_WINDOW(window)
-                     && reason >= XFCE_NOTIFY_CLOSE_REASON_EXPIRED
-                     && reason <= XFCE_NOTIFY_CLOSE_REASON_UNKNOWN);
+    g_return_if_fail(EXPIDUS_IS_NOTIFY_WINDOW(window)
+                     && reason >= EXPIDUS_NOTIFY_CLOSE_REASON_EXPIRED
+                     && reason <= EXPIDUS_NOTIFY_CLOSE_REASON_UNKNOWN);
 
     g_signal_emit(G_OBJECT(window), signals[SIG_CLOSED], 0, reason);
 }

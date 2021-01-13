@@ -1,25 +1,25 @@
-#XfceNotifyWindow {
+#ExpidusNotifyWindow {
     background-color: #f9edbe;
     border-radius: 6px;
     border: 1px solid shade(#f9edbe, 0.8);
     padding: 20px;
 }
 
-#XfceNotifyWindow:hover {
+#ExpidusNotifyWindow:hover {
     background-color: shade(#f9edbe, 0.98);
     border-color: shade(#f9edbe, 0.5);
 }
 
-#XfceNotifyWindow label,
-#XfceNotifyWindow image {
+#ExpidusNotifyWindow label,
+#ExpidusNotifyWindow image {
     color: #555555;
 }
 
-#XfceNotifyWindow label#summary {
+#ExpidusNotifyWindow label#summary {
     font-weight: Bold;
 }
 
-#XfceNotifyWindow button {
+#ExpidusNotifyWindow button {
     border-style: none;
     box-shadow: none;
     background-image: none;
@@ -27,7 +27,7 @@
     color: #555555;
 }
 
-#XfceNotifyWindow button:hover {
+#ExpidusNotifyWindow button:hover {
     border-style: none;
     box-shadow: none;
     background-image: none;
@@ -35,17 +35,17 @@
     color: #555555;
 }
 
-#XfceNotifyWindow progressbar {
+#ExpidusNotifyWindow progressbar {
     min-height: 6px;
     border-radius: 3px;
 }
 
-#XfceNotifyWindow progressbar progress {
+#ExpidusNotifyWindow progressbar progress {
     background-image: none;
     background-color: shade(#555555, 1.2);
 }
 
-#XfceNotifyWindow progressbar trough {
+#ExpidusNotifyWindow progressbar trough {
     background-image: linear-gradient(to bottom,
                                       shade(#f9edbe, 0.85),
                                       shade(#f9edbe, 1.05)

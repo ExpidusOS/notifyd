@@ -1,10 +1,10 @@
 /* vi:set et ai sw=4 sts=4 ts=4: */
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
  *  Copyright (c) 2008-2009 Brian Tarricone <bjt23@cornell.edu>
- *  Copyright (c) 2009 Jérôme Guelfucci <jeromeg@xfce.org>
- *  Copyright (c) 2015 Ali Abdallah    <ali@xfce.org>
+ *  Copyright (c) 2009 Jérôme Guelfucci <jeromeg@expidus.org>
+ *  Copyright (c) 2015 Ali Abdallah    <ali@expidus.org>
  *
  *  The workarea per monitor code is taken from
  *  http://trac.galago-project.org/attachment/ticket/5/10-nd-improve-multihead-support.patch
@@ -31,31 +31,31 @@
 #include <string.h>
 #endif
 
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
 #include <gdk/gdkx.h>
 #include <gio/gio.h>
 
 #include <xfconf/xfconf.h>
 
-#include <common/xfce-notify-log.h>
+#include <common/expidus-notify-log.h>
 
-#include "xfce-notify-gbus.h"
-#include "xfce-notify-daemon.h"
-#include "xfce-notify-window.h"
-#include "xfce-notify-marshal.h"
+#include "expidus-notify-gbus.h"
+#include "expidus-notify-daemon.h"
+#include "expidus-notify-window.h"
+#include "expidus-notify-marshal.h"
 
 #define SPACE 16
-#define XND_N_MONITORS xfce_notify_daemon_get_n_monitors_quark()
+#define XND_N_MONITORS expidus_notify_daemon_get_n_monitors_quark()
 #define KNOWN_APPLICATIONS_PROP       "/applications/known_applications"
 #define MUTED_APPLICATIONS_PROP       "/applications/muted_applications"
 
-struct _XfceNotifyDaemon
+struct _ExpidusNotifyDaemon
 {
-    XfceNotifyGBusSkeleton parent;
+    ExpidusNotifyGBusSkeleton parent;
 
-    XfceNotifyOrgXfceNotifyd *xfce_iface_skeleton;
+    ExpidusNotifyOrgExpidusNotifyd *expidus_iface_skeleton;
     gint expire_timeout;
     guint bus_name_id;
     gdouble initial_opacity;
@@ -83,9 +83,9 @@ struct _XfceNotifyDaemon
 
 typedef struct
 {
-    XfceNotifyGBusSkeletonClass  parent;
+    ExpidusNotifyGBusSkeletonClass  parent;
 
-} XfceNotifyDaemonClass;
+} ExpidusNotifyDaemonClass;
 
 
 enum
@@ -95,32 +95,32 @@ enum
     URGENCY_CRITICAL,
 };
 
-static void xfce_notify_daemon_screen_changed(GdkScreen *screen,
+static void expidus_notify_daemon_screen_changed(GdkScreen *screen,
                                               gpointer user_data);
-static void xfce_notify_daemon_update_reserved_rectangles(gpointer key,
+static void expidus_notify_daemon_update_reserved_rectangles(gpointer key,
                                                           gpointer value,
                                                           gpointer data);
-static void xfce_notify_daemon_finalize(GObject *obj);
-static void  xfce_notify_daemon_constructed(GObject *obj);
+static void expidus_notify_daemon_finalize(GObject *obj);
+static void  expidus_notify_daemon_constructed(GObject *obj);
 
-static GQuark xfce_notify_daemon_get_n_monitors_quark(void);
+static GQuark expidus_notify_daemon_get_n_monitors_quark(void);
 
-static GdkFilterReturn xfce_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
+static GdkFilterReturn expidus_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
                                                           GdkEvent *event,
                                                           gpointer user_data);
 
-static void xfce_gdk_rectangle_largest_box(GdkRectangle *src1,
+static void expidus_gdk_rectangle_largest_box(GdkRectangle *src1,
                                            GdkRectangle *src2,
                                            GdkRectangle *dest);
-static void xfce_notify_daemon_get_workarea(GdkScreen *screen,
+static void expidus_notify_daemon_get_workarea(GdkScreen *screen,
                                             guint monitor,
                                             GdkRectangle *rect);
-static void daemon_quit (XfceNotifyDaemon *xndaemon);
+static void daemon_quit (ExpidusNotifyDaemon *xndaemon);
 
 /* DBus method callbacks  forward declarations */
-static gboolean notify_get_capabilities (XfceNotifyGBus *skeleton,
+static gboolean notify_get_capabilities (ExpidusNotifyGBus *skeleton,
                                 		 GDBusMethodInvocation   *invocation,
-                                         XfceNotifyDaemon *xndaemon);
+                                         ExpidusNotifyDaemon *xndaemon);
 
 static void notify_update_known_applications (XfconfChannel *channel,
                                               gchar *app_name);
@@ -128,7 +128,7 @@ static void notify_update_known_applications (XfconfChannel *channel,
 static gboolean notify_application_is_muted (XfconfChannel *channel,
                                              gchar *new_app_name);
 
-static gboolean notify_notify (XfceNotifyGBus *skeleton,
+static gboolean notify_notify (ExpidusNotifyGBus *skeleton,
                                GDBusMethodInvocation   *invocation,
                                const gchar *app_name,
                                guint replaces_id,
@@ -138,40 +138,40 @@ static gboolean notify_notify (XfceNotifyGBus *skeleton,
                                const gchar **actions,
                                GVariant *hints,
                                gint expire_timeout,
-                               XfceNotifyDaemon *xndaemon);
+                               ExpidusNotifyDaemon *xndaemon);
 
 
-static gboolean notify_close_notification (XfceNotifyGBus *skeleton,
+static gboolean notify_close_notification (ExpidusNotifyGBus *skeleton,
                                            GDBusMethodInvocation   *invocation,
                                            guint id,
-                                           XfceNotifyDaemon *xndaemon);
+                                           ExpidusNotifyDaemon *xndaemon);
 
 
-static gboolean notify_get_server_information (XfceNotifyGBus *skeleton,
+static gboolean notify_get_server_information (ExpidusNotifyGBus *skeleton,
                                                GDBusMethodInvocation *invocation,
-                                               XfceNotifyDaemon *xndaemon);
+                                               ExpidusNotifyDaemon *xndaemon);
 
 
-static gboolean notify_quit (XfceNotifyOrgXfceNotifyd *skeleton,
+static gboolean notify_quit (ExpidusNotifyOrgExpidusNotifyd *skeleton,
                              GDBusMethodInvocation   *invocation,
-                             XfceNotifyDaemon *xndaemon);
+                             ExpidusNotifyDaemon *xndaemon);
 
 
-G_DEFINE_TYPE(XfceNotifyDaemon, xfce_notify_daemon, XFCE_NOTIFY_TYPE_GBUS_SKELETON)
+G_DEFINE_TYPE(ExpidusNotifyDaemon, expidus_notify_daemon, EXPIDUS_NOTIFY_TYPE_GBUS_SKELETON)
 
 
 static void
-xfce_notify_daemon_class_init(XfceNotifyDaemonClass *klass)
+expidus_notify_daemon_class_init(ExpidusNotifyDaemonClass *klass)
 {
     GObjectClass *gobject_class = (GObjectClass *)klass;
 
-    gobject_class->finalize = xfce_notify_daemon_finalize;
-    gobject_class->constructed = xfce_notify_daemon_constructed;
+    gobject_class->finalize = expidus_notify_daemon_finalize;
+    gobject_class->constructed = expidus_notify_daemon_constructed;
 }
 
 
 static gint
-xfce_direct_compare(gconstpointer a,
+expidus_direct_compare(gconstpointer a,
                     gconstpointer b,
                     gpointer user_data)
 {
@@ -180,7 +180,7 @@ xfce_direct_compare(gconstpointer a,
 
 
 static GQuark
-xfce_notify_daemon_get_n_monitors_quark(void)
+expidus_notify_daemon_get_n_monitors_quark(void)
 {
     static GQuark quark = 0;
 
@@ -192,7 +192,7 @@ xfce_notify_daemon_get_n_monitors_quark(void)
 
 #if GTK_CHECK_VERSION (3, 22, 0)
 static gint
-xfce_notify_daemon_get_monitor_index (GdkDisplay *display,
+expidus_notify_daemon_get_monitor_index (GdkDisplay *display,
                                       GdkMonitor *monitor)
 {
     gint i, nmonitors;
@@ -209,20 +209,20 @@ xfce_notify_daemon_get_monitor_index (GdkDisplay *display,
 #endif
 
 static gint
-xfce_notify_daemon_get_primary_monitor (GdkScreen *screen)
+expidus_notify_daemon_get_primary_monitor (GdkScreen *screen)
 {
 #if GTK_CHECK_VERSION (3, 22, 0)
     GdkDisplay *display = gdk_screen_get_display (screen);
     GdkMonitor *monitor =gdk_display_get_primary_monitor (display);
 
-    return xfce_notify_daemon_get_monitor_index (display, monitor);
+    return expidus_notify_daemon_get_monitor_index (display, monitor);
 #else
     return gdk_screen_get_primary_monitor (screen);
 #endif
 }
 
 static gint
-xfce_notify_daemon_get_monitor_at_point (GdkScreen *screen,
+expidus_notify_daemon_get_monitor_at_point (GdkScreen *screen,
                                          gint x,
                                          gint y)
 {
@@ -230,14 +230,14 @@ xfce_notify_daemon_get_monitor_at_point (GdkScreen *screen,
     GdkDisplay *display = gdk_screen_get_display (screen);
     GdkMonitor *monitor = gdk_display_get_monitor_at_point (display, x, y);
 
-    return xfce_notify_daemon_get_monitor_index (display, monitor);
+    return expidus_notify_daemon_get_monitor_index (display, monitor);
 #else
     return gdk_screen_get_monitor_at_point (screen, x, y);
 #endif
 }
 
 static inline gint
-xfce_notify_daemon_get_n_monitors (GdkScreen *screen)
+expidus_notify_daemon_get_n_monitors (GdkScreen *screen)
 {
 #if GTK_CHECK_VERSION (3, 22, 0)
     return gdk_display_get_n_monitors (gdk_screen_get_display (screen));
@@ -247,11 +247,11 @@ xfce_notify_daemon_get_n_monitors (GdkScreen *screen)
 }
 
 static GdkFilterReturn
-xfce_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
+expidus_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
                                    GdkEvent *event,
                                    gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = XFCE_NOTIFY_DAEMON(user_data);
+    ExpidusNotifyDaemon *xndaemon = EXPIDUS_NOTIFY_DAEMON(user_data);
     XPropertyEvent *xevt = (XPropertyEvent *)gxevent;
 
     if(xevt->type == PropertyNotify
@@ -259,13 +259,13 @@ xfce_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
        && xndaemon->monitors_workarea)
     {
         GdkScreen *screen = gdk_event_get_screen(event);
-        int nmonitor = xfce_notify_daemon_get_n_monitors (screen);
+        int nmonitor = expidus_notify_daemon_get_n_monitors (screen);
         int j;
 
         DBG("got _NET_WORKAREA change on rootwin!");
 
         for(j = 0; j < nmonitor; j++)
-            xfce_notify_daemon_get_workarea(screen, j,
+            expidus_notify_daemon_get_workarea(screen, j,
                                             &(xndaemon->monitors_workarea[j]));
     }
 
@@ -273,10 +273,10 @@ xfce_notify_rootwin_watch_workarea(GdkXEvent *gxevent,
 }
 
 static void
-xfce_notify_daemon_screen_changed(GdkScreen *screen,
+expidus_notify_daemon_screen_changed(GdkScreen *screen,
                                   gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = XFCE_NOTIFY_DAEMON(user_data);
+    ExpidusNotifyDaemon *xndaemon = EXPIDUS_NOTIFY_DAEMON(user_data);
     gint j;
     gint new_nmonitor;
     gint old_nmonitor;
@@ -285,7 +285,7 @@ xfce_notify_daemon_screen_changed(GdkScreen *screen,
         /* Placement data not initialized, don't update it */
         return;
 
-    new_nmonitor = xfce_notify_daemon_get_n_monitors (screen);
+    new_nmonitor = expidus_notify_daemon_get_n_monitors (screen);
     old_nmonitor = GPOINTER_TO_INT(g_object_get_qdata(G_OBJECT(screen), XND_N_MONITORS));
 
     DBG("Got 'screen-changed' signal");
@@ -303,7 +303,7 @@ xfce_notify_daemon_screen_changed(GdkScreen *screen,
     xndaemon->monitors_workarea = g_new0(GdkRectangle, new_nmonitor);
     for(j = 0; j < new_nmonitor; j++) {
         DBG("Screen changed, updating workarea for monitor %d", j);
-        xfce_notify_daemon_get_workarea(screen, j,
+        expidus_notify_daemon_get_workarea(screen, j,
                                         &(xndaemon->monitors_workarea[j]));
     }
 
@@ -312,48 +312,48 @@ xfce_notify_daemon_screen_changed(GdkScreen *screen,
 
     /* Traverse the active notifications tree to fill the new reserved rectangles array for screen */
     g_tree_foreach(xndaemon->active_notifications,
-                   (GTraverseFunc)xfce_notify_daemon_update_reserved_rectangles,
+                   (GTraverseFunc)expidus_notify_daemon_update_reserved_rectangles,
                    xndaemon);
 }
 
 static void
-xfce_notify_daemon_init_placement_data(XfceNotifyDaemon *xndaemon)
+expidus_notify_daemon_init_placement_data(ExpidusNotifyDaemon *xndaemon)
 {
     GdkScreen *screen = gdk_screen_get_default();
-    gint nmonitor = xfce_notify_daemon_get_n_monitors (screen);
+    gint nmonitor = expidus_notify_daemon_get_n_monitors (screen);
     GdkWindow *groot;
     int j;
 
     g_object_set_qdata(G_OBJECT(screen), XND_N_MONITORS, GINT_TO_POINTER(nmonitor));
 
     g_signal_connect(G_OBJECT(screen), "monitors-changed",
-                     G_CALLBACK(xfce_notify_daemon_screen_changed), xndaemon);
+                     G_CALLBACK(expidus_notify_daemon_screen_changed), xndaemon);
 
     xndaemon->reserved_rectangles = g_new0(GList *, nmonitor);
     xndaemon->monitors_workarea = g_new0(GdkRectangle, nmonitor);
 
     for(j = 0; j < nmonitor; j++)
-        xfce_notify_daemon_get_workarea(screen, j,
+        expidus_notify_daemon_get_workarea(screen, j,
                                         &(xndaemon->monitors_workarea[j]));
 
     /* Monitor root window changes */
     groot = gdk_screen_get_root_window(screen);
     gdk_window_set_events(groot, gdk_window_get_events(groot) | GDK_PROPERTY_CHANGE_MASK);
-    gdk_window_add_filter(groot, xfce_notify_rootwin_watch_workarea, xndaemon);
+    gdk_window_add_filter(groot, expidus_notify_rootwin_watch_workarea, xndaemon);
 }
 
 
 static void
-xfce_notify_bus_name_acquired_cb (GDBusConnection *connection,
+expidus_notify_bus_name_acquired_cb (GDBusConnection *connection,
                                   const gchar *name,
                                   gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon;
+    ExpidusNotifyDaemon *xndaemon;
     GError *error = NULL;
     gboolean exported;
 
 
-    xndaemon = XFCE_NOTIFY_DAEMON(user_data);
+    xndaemon = EXPIDUS_NOTIFY_DAEMON(user_data);
 
     exported =  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (xndaemon),
                                                   connection,
@@ -381,13 +381,13 @@ xfce_notify_bus_name_acquired_cb (GDBusConnection *connection,
         gtk_main_quit ();
     }
 
-    xndaemon->xfce_iface_skeleton  = xfce_notify_org_xfce_notifyd_skeleton_new();
-    exported =  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON(xndaemon->xfce_iface_skeleton),
+    xndaemon->expidus_iface_skeleton  = expidus_notify_org_expidus_notifyd_skeleton_new();
+    exported =  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON(xndaemon->expidus_iface_skeleton),
                                                   connection,
                                                   "/org/freedesktop/Notifications",
                                                   &error);
     if (exported)
-        g_signal_connect (xndaemon->xfce_iface_skeleton, "handle-quit",
+        g_signal_connect (xndaemon->expidus_iface_skeleton, "handle-quit",
                           G_CALLBACK(notify_quit), xndaemon);
     else
     {
@@ -398,34 +398,34 @@ xfce_notify_bus_name_acquired_cb (GDBusConnection *connection,
 }
 
 static void
-xfce_notify_bus_name_lost_cb (GDBusConnection *connection,
+expidus_notify_bus_name_lost_cb (GDBusConnection *connection,
                               const gchar     *name,
                               gpointer         user_data)
 {
     g_print (_("Another notification daemon is running, exiting\n"));
-    daemon_quit(XFCE_NOTIFY_DAEMON(user_data));
+    daemon_quit(EXPIDUS_NOTIFY_DAEMON(user_data));
 }
 
-static void xfce_notify_daemon_constructed (GObject *obj)
+static void expidus_notify_daemon_constructed (GObject *obj)
 {
-    XfceNotifyDaemon *self;
+    ExpidusNotifyDaemon *self;
 
-    self  = XFCE_NOTIFY_DAEMON (obj);
+    self  = EXPIDUS_NOTIFY_DAEMON (obj);
 
     self->bus_name_id = g_bus_own_name (G_BUS_TYPE_SESSION,
                                         "org.freedesktop.Notifications",
                                         G_BUS_NAME_OWNER_FLAGS_REPLACE,
-                                        xfce_notify_bus_name_acquired_cb,
+                                        expidus_notify_bus_name_acquired_cb,
                                         NULL,
-                                        xfce_notify_bus_name_lost_cb,
+                                        expidus_notify_bus_name_lost_cb,
                                         self,
                                         NULL);
 }
 
 static void
-xfce_notify_daemon_init(XfceNotifyDaemon *xndaemon)
+expidus_notify_daemon_init(ExpidusNotifyDaemon *xndaemon)
 {
-    xndaemon->active_notifications = g_tree_new_full(xfce_direct_compare,
+    xndaemon->active_notifications = g_tree_new_full(expidus_direct_compare,
                                                      NULL, NULL,
                                                      (GDestroyNotify)gtk_widget_destroy);
 
@@ -438,9 +438,9 @@ xfce_notify_daemon_init(XfceNotifyDaemon *xndaemon)
 }
 
 static void
-xfce_notify_daemon_finalize(GObject *obj)
+expidus_notify_daemon_finalize(GObject *obj)
 {
-    XfceNotifyDaemon *xndaemon = XFCE_NOTIFY_DAEMON(obj);
+    ExpidusNotifyDaemon *xndaemon = EXPIDUS_NOTIFY_DAEMON(obj);
     GDBusConnection *connection;
 
     connection = g_dbus_interface_skeleton_get_connection(G_DBUS_INTERFACE_SKELETON(xndaemon));
@@ -452,11 +452,11 @@ xfce_notify_daemon_finalize(GObject *obj)
         g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON(xndaemon));
     }
 
-    if (xndaemon->xfce_iface_skeleton &&
-        g_dbus_interface_skeleton_has_connection(G_DBUS_INTERFACE_SKELETON(xndaemon->xfce_iface_skeleton),
+    if (xndaemon->expidus_iface_skeleton &&
+        g_dbus_interface_skeleton_has_connection(G_DBUS_INTERFACE_SKELETON(xndaemon->expidus_iface_skeleton),
                                                  connection))
     {
-    g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON(xndaemon->xfce_iface_skeleton));
+    g_dbus_interface_skeleton_unexport (G_DBUS_INTERFACE_SKELETON(xndaemon->expidus_iface_skeleton));
     }
 
 
@@ -465,9 +465,9 @@ xfce_notify_daemon_finalize(GObject *obj)
 
       GdkScreen *screen = gdk_screen_get_default ();
       GdkWindow *groot = gdk_screen_get_root_window(screen);
-      gint nmonitor = xfce_notify_daemon_get_n_monitors (screen);
+      gint nmonitor = expidus_notify_daemon_get_n_monitors (screen);
 
-      gdk_window_remove_filter(groot, xfce_notify_rootwin_watch_workarea, xndaemon);
+      gdk_window_remove_filter(groot, expidus_notify_rootwin_watch_workarea, xndaemon);
 
       for(i = 0; i < nmonitor; i++) {
           if (xndaemon->reserved_rectangles[i])
@@ -485,13 +485,13 @@ xfce_notify_daemon_finalize(GObject *obj)
     if(xndaemon->settings)
         g_object_unref(xndaemon->settings);
 
-    G_OBJECT_CLASS(xfce_notify_daemon_parent_class)->finalize(obj);
+    G_OBJECT_CLASS(expidus_notify_daemon_parent_class)->finalize(obj);
 }
 
 
 
 static guint32
-xfce_notify_daemon_generate_id(XfceNotifyDaemon *xndaemon)
+expidus_notify_daemon_generate_id(ExpidusNotifyDaemon *xndaemon)
 {
     if(G_UNLIKELY(xndaemon->last_notification_id == 0))
         xndaemon->last_notification_id = 1;
@@ -500,37 +500,37 @@ xfce_notify_daemon_generate_id(XfceNotifyDaemon *xndaemon)
 }
 
 static void
-xfce_notify_daemon_window_action_invoked(XfceNotifyWindow *window,
+expidus_notify_daemon_window_action_invoked(ExpidusNotifyWindow *window,
                                          const gchar *action,
                                          gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = user_data;
+    ExpidusNotifyDaemon *xndaemon = user_data;
     guint id = GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(window),
                                                   "--notify-id"));
 
-    xfce_notify_gbus_emit_action_invoked (XFCE_NOTIFY_GBUS(xndaemon),
+    expidus_notify_gbus_emit_action_invoked (EXPIDUS_NOTIFY_GBUS(xndaemon),
                                           id,
                                           action);
 }
 
 static void
-xfce_notify_daemon_window_closed(XfceNotifyWindow *window,
-                                 XfceNotifyCloseReason reason,
+expidus_notify_daemon_window_closed(ExpidusNotifyWindow *window,
+                                 ExpidusNotifyCloseReason reason,
                                  gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = user_data;
+    ExpidusNotifyDaemon *xndaemon = user_data;
     gpointer id_p = g_object_get_data(G_OBJECT(window), "--notify-id");
     GList *list;
-    gint monitor = xfce_notify_window_get_last_monitor(window);
+    gint monitor = expidus_notify_window_get_last_monitor(window);
 
     /* Remove the reserved rectangle from the list */
     list = xndaemon->reserved_rectangles[monitor];
-    list = g_list_remove(list, xfce_notify_window_get_geometry(window));
+    list = g_list_remove(list, expidus_notify_window_get_geometry(window));
     xndaemon->reserved_rectangles[monitor] = list;
 
     g_tree_remove(xndaemon->active_notifications, id_p);
 
-    xfce_notify_gbus_emit_notification_closed (XFCE_NOTIFY_GBUS(xndaemon),
+    expidus_notify_gbus_emit_notification_closed (EXPIDUS_NOTIFY_GBUS(xndaemon),
                                                GPOINTER_TO_UINT(id_p),
                                                (guint)reason);
 }
@@ -550,7 +550,7 @@ xfce_notify_daemon_window_closed(XfceNotifyWindow *window,
  *                    3
  */
 static void
-xfce_gdk_rectangle_largest_box(GdkRectangle *src1,
+expidus_gdk_rectangle_largest_box(GdkRectangle *src1,
                                GdkRectangle *src2,
                                GdkRectangle *dest)
 {
@@ -606,7 +606,7 @@ translate_origin(GdkRectangle *src1,
 /* Returns the workarea (largest non-panel/dock occupied rectangle) for a given
    monitor. */
 static void
-xfce_notify_daemon_get_workarea(GdkScreen *screen,
+expidus_notify_daemon_get_workarea(GdkScreen *screen,
                                 guint monitor_num,
                                 GdkRectangle *workarea)
 {
@@ -674,7 +674,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
                 translate_origin(workarea, -monitor_xoff, -monitor_yoff);
                 translate_origin(&intersection, -monitor_xoff, -monitor_yoff);
 
-                xfce_gdk_rectangle_largest_box(workarea, &intersection, workarea);
+                expidus_gdk_rectangle_largest_box(workarea, &intersection, workarea);
 
                 translate_origin(workarea, monitor_xoff, monitor_yoff);
                 translate_origin(&intersection, monitor_xoff, monitor_yoff);
@@ -688,12 +688,12 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static void
-xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
+expidus_notify_daemon_window_size_allocate(GtkWidget *widget,
                                         GtkAllocation *allocation,
                                         gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = user_data;
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW(widget);
+    ExpidusNotifyDaemon *xndaemon = user_data;
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW(widget);
     GdkScreen *p_screen = NULL;
     GdkDevice *pointer;
     GdkScreen *widget_screen;
@@ -714,12 +714,12 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
     if (placement_data_initialized == FALSE) {
         /* First time we place a notification, initialize the arrays needed for
          * that (workarea, notification lists...). */
-        xfce_notify_daemon_init_placement_data(xndaemon);
+        expidus_notify_daemon_init_placement_data(xndaemon);
         placement_data_initialized = TRUE;
     }
 
-    old_geom = *xfce_notify_window_get_geometry(window);
-    old_monitor = xfce_notify_window_get_last_monitor(window);
+    old_geom = *expidus_notify_window_get_geometry(window);
+    old_monitor = expidus_notify_window_get_last_monitor(window);
 
     widget_screen = gtk_widget_get_screen (widget);
 #if GTK_CHECK_VERSION (3, 20, 0)
@@ -734,9 +734,9 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
     gdk_device_get_position (pointer, &p_screen, &x, &y);
 
     if (xndaemon->primary_monitor == 1)
-        monitor = xfce_notify_daemon_get_primary_monitor (widget_screen);
+        monitor = expidus_notify_daemon_get_primary_monitor (widget_screen);
     else
-        monitor = xfce_notify_daemon_get_monitor_at_point (p_screen, x, y);
+        monitor = expidus_notify_daemon_get_monitor_at_point (p_screen, x, y);
 
     DBG("We are on the monitor %i", monitor);
 
@@ -758,7 +758,7 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
         else
         {
             GList *old_list = xndaemon->reserved_rectangles[old_monitor];
-            old_list = g_list_remove(old_list, xfce_notify_window_get_geometry(window));
+            old_list = g_list_remove(old_list, expidus_notify_window_get_geometry(window));
             xndaemon->reserved_rectangles[old_monitor] = old_list;
         }
     }
@@ -804,10 +804,10 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
         /* If the list is empty, there are no displayed notifications */
         DBG("No notifications on this monitor");
 
-        xfce_notify_window_set_geometry(XFCE_NOTIFY_WINDOW(widget), widget_geom);
-        xfce_notify_window_set_last_monitor(XFCE_NOTIFY_WINDOW(widget), monitor);
+        expidus_notify_window_set_geometry(EXPIDUS_NOTIFY_WINDOW(widget), widget_geom);
+        expidus_notify_window_set_last_monitor(EXPIDUS_NOTIFY_WINDOW(widget), monitor);
 
-        list = g_list_prepend(list, xfce_notify_window_get_geometry(XFCE_NOTIFY_WINDOW(widget)));
+        list = g_list_prepend(list, expidus_notify_window_get_geometry(EXPIDUS_NOTIFY_WINDOW(widget)));
         xndaemon->reserved_rectangles[monitor] = list;
 
         DBG("Notification position: x=%i y=%i", widget_geom.x, widget_geom.y);
@@ -929,10 +929,10 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
         }
     }
 
-    xfce_notify_window_set_geometry(XFCE_NOTIFY_WINDOW(widget), widget_geom);
-    xfce_notify_window_set_last_monitor(XFCE_NOTIFY_WINDOW(widget), monitor);
+    expidus_notify_window_set_geometry(EXPIDUS_NOTIFY_WINDOW(widget), widget_geom);
+    expidus_notify_window_set_last_monitor(EXPIDUS_NOTIFY_WINDOW(widget), monitor);
 
-    list = g_list_prepend(list, xfce_notify_window_get_geometry(XFCE_NOTIFY_WINDOW(widget)));
+    list = g_list_prepend(list, expidus_notify_window_get_geometry(EXPIDUS_NOTIFY_WINDOW(widget)));
     xndaemon->reserved_rectangles[monitor] = list;
 
     DBG("Move the notification to: x=%i, y=%i", widget_geom.x, widget_geom.y);
@@ -941,12 +941,12 @@ xfce_notify_daemon_window_size_allocate(GtkWidget *widget,
 
 
 static void
-xfce_notify_daemon_update_reserved_rectangles(gpointer key,
+expidus_notify_daemon_update_reserved_rectangles(gpointer key,
                                               gpointer value,
                                               gpointer data)
 {
-    XfceNotifyDaemon *xndaemon = XFCE_NOTIFY_DAEMON(data);
-    XfceNotifyWindow *window = XFCE_NOTIFY_WINDOW(value);
+    ExpidusNotifyDaemon *xndaemon = EXPIDUS_NOTIFY_DAEMON(data);
+    ExpidusNotifyWindow *window = EXPIDUS_NOTIFY_WINDOW(value);
     gint width, height;
     GtkAllocation allocation;
 
@@ -958,14 +958,14 @@ xfce_notify_daemon_update_reserved_rectangles(gpointer key,
     allocation.width = width;
     allocation.height = height;
 
-    xfce_notify_daemon_window_size_allocate(GTK_WIDGET(window), &allocation, xndaemon);
+    expidus_notify_daemon_window_size_allocate(GTK_WIDGET(window), &allocation, xndaemon);
 }
 
 
 
-static gboolean notify_get_capabilities (XfceNotifyGBus *skeleton,
+static gboolean notify_get_capabilities (ExpidusNotifyGBus *skeleton,
                                          GDBusMethodInvocation   *invocation,
-                                         XfceNotifyDaemon *xndaemon)
+                                         ExpidusNotifyDaemon *xndaemon)
 {
     const gchar *const capabilities[] =
     {
@@ -973,7 +973,7 @@ static gboolean notify_get_capabilities (XfceNotifyGBus *skeleton,
         "x-canonical-private-icon-only", NULL
     };
 
-    xfce_notify_gbus_complete_get_capabilities(skeleton, invocation, capabilities);
+    expidus_notify_gbus_complete_get_capabilities(skeleton, invocation, capabilities);
 
     return TRUE;
 }
@@ -1005,7 +1005,7 @@ add_and_propagate_css_provider (GtkWidget *widget, GtkStyleProvider *provider, g
 }
 
 static void
-notify_update_theme_for_window (XfceNotifyDaemon *xndaemon, GtkWidget *window, gboolean redraw)
+notify_update_theme_for_window (ExpidusNotifyDaemon *xndaemon, GtkWidget *window, gboolean redraw)
 {
     GtkStyleContext *context;
 
@@ -1042,7 +1042,7 @@ notify_update_theme_for_window (XfceNotifyDaemon *xndaemon, GtkWidget *window, g
 static gboolean
 notify_update_theme_foreach (gpointer key, gpointer value, gpointer data)
 {
-    XfceNotifyDaemon *xndaemon = XFCE_NOTIFY_DAEMON(data);
+    ExpidusNotifyDaemon *xndaemon = EXPIDUS_NOTIFY_DAEMON(data);
     GtkWidget *window = GTK_WIDGET(value);
 
     notify_update_theme_for_window (xndaemon, window, TRUE);
@@ -1124,7 +1124,7 @@ notify_application_is_muted (XfconfChannel *channel, gchar *new_app_name)
 }
 
 static gboolean
-notify_notify (XfceNotifyGBus *skeleton,
+notify_notify (ExpidusNotifyGBus *skeleton,
                GDBusMethodInvocation   *invocation,
                const gchar *app_name,
                guint replaces_id,
@@ -1134,9 +1134,9 @@ notify_notify (XfceNotifyGBus *skeleton,
                const gchar **actions,
                GVariant *hints,
                gint expire_timeout,
-               XfceNotifyDaemon *xndaemon)
+               ExpidusNotifyDaemon *xndaemon)
 {
-    XfceNotifyWindow *window;
+    ExpidusNotifyWindow *window;
     GdkPixbuf *pix = NULL;
     GVariant *image_data = NULL;
     GVariant *icon_data = NULL;
@@ -1149,7 +1149,7 @@ notify_notify (XfceNotifyGBus *skeleton,
     gboolean transient = FALSE;
     GVariant *item;
     GVariantIter iter;
-    guint OUT_id = xfce_notify_daemon_generate_id(xndaemon);
+    guint OUT_id = expidus_notify_daemon_generate_id(xndaemon);
     gboolean application_is_muted = FALSE;
 
     g_variant_iter_init (&iter, hints);
@@ -1261,14 +1261,14 @@ notify_notify (XfceNotifyGBus *skeleton,
                       if (xndaemon->log_level_apps == 0 ||
                           (xndaemon->log_level_apps == 1 && application_is_muted == FALSE) ||
                           (xndaemon->log_level_apps == 2 && application_is_muted == TRUE)) {
-                          xfce_notify_log_insert (new_app_name, summary, body,
+                          expidus_notify_log_insert (new_app_name, summary, body,
                                                   image_data, image_path, app_icon,
                                                   desktop_id, expire_timeout, actions,
                                                   xndaemon->log_max_size);
                       }
             }
 
-            xfce_notify_gbus_complete_notify (skeleton, invocation, OUT_id);
+            expidus_notify_gbus_complete_notify (skeleton, invocation, OUT_id);
             if (image_data)
                 g_variant_unref (image_data);
             if (desktop_id)
@@ -1281,20 +1281,20 @@ notify_notify (XfceNotifyGBus *skeleton,
        && (window = g_tree_lookup(xndaemon->active_notifications,
                                   GUINT_TO_POINTER(replaces_id))))
     {
-        xfce_notify_window_set_summary(window, summary);
-        xfce_notify_window_set_body(window, body);
-        xfce_notify_window_set_actions(window, actions, xndaemon->css_provider);
-        xfce_notify_window_set_expire_timeout(window, expire_timeout);
-        xfce_notify_window_set_opacity(window, xndaemon->initial_opacity);
+        expidus_notify_window_set_summary(window, summary);
+        expidus_notify_window_set_body(window, body);
+        expidus_notify_window_set_actions(window, actions, xndaemon->css_provider);
+        expidus_notify_window_set_expire_timeout(window, expire_timeout);
+        expidus_notify_window_set_opacity(window, xndaemon->initial_opacity);
 
         OUT_id = replaces_id;
     } else {
-        window = XFCE_NOTIFY_WINDOW(xfce_notify_window_new_with_actions(summary, body,
+        window = EXPIDUS_NOTIFY_WINDOW(expidus_notify_window_new_with_actions(summary, body,
                                                                         app_icon,
                                                                         expire_timeout,
                                                                         actions,
                                                                         xndaemon->css_provider));
-        xfce_notify_window_set_opacity(window, xndaemon->initial_opacity);
+        expidus_notify_window_set_opacity(window, xndaemon->initial_opacity);
 
         g_object_set_data(G_OBJECT(window), "--notify-id",
                           GUINT_TO_POINTER(OUT_id));
@@ -1303,13 +1303,13 @@ notify_notify (XfceNotifyGBus *skeleton,
                       GUINT_TO_POINTER(OUT_id), window);
 
         g_signal_connect(G_OBJECT(window), "action-invoked",
-                         G_CALLBACK(xfce_notify_daemon_window_action_invoked),
+                         G_CALLBACK(expidus_notify_daemon_window_action_invoked),
                          xndaemon);
         g_signal_connect(G_OBJECT(window), "closed",
-                         G_CALLBACK(xfce_notify_daemon_window_closed),
+                         G_CALLBACK(expidus_notify_daemon_window_closed),
                          xndaemon);
         g_signal_connect(G_OBJECT(window), "size-allocate",
-                         G_CALLBACK(xfce_notify_daemon_window_size_allocate),
+                         G_CALLBACK(expidus_notify_daemon_window_size_allocate),
                          xndaemon);
 
         gtk_widget_realize(GTK_WIDGET(window));
@@ -1322,26 +1322,26 @@ notify_notify (XfceNotifyGBus *skeleton,
     if (image_data) {
         pix = notify_pixbuf_from_image_data(image_data);
         if (pix) {
-            xfce_notify_window_set_icon_pixbuf(window, pix);
+            expidus_notify_window_set_icon_pixbuf(window, pix);
             g_object_unref(G_OBJECT(pix));
         }
     }
     else if (image_path) {
-        xfce_notify_window_set_icon_name (window, image_path);
+        expidus_notify_window_set_icon_name (window, image_path);
     }
     else if (app_icon && (g_strcmp0 (app_icon, "") != 0)) {
-        xfce_notify_window_set_icon_name (window, app_icon);
+        expidus_notify_window_set_icon_name (window, app_icon);
     }
     else if (icon_data) {
         pix = notify_pixbuf_from_image_data(icon_data);
         if (pix) {
-            xfce_notify_window_set_icon_pixbuf(window, pix);
+            expidus_notify_window_set_icon_pixbuf(window, pix);
             g_object_unref(G_OBJECT(pix));
         }
     }
     else if (desktop_id) {
         gchar *icon_name = notify_icon_name_from_desktop_id (desktop_id);
-        xfce_notify_window_set_icon_name (window, icon_name);
+        expidus_notify_window_set_icon_name (window, icon_name);
         g_free (icon_name);
     }
 
@@ -1349,24 +1349,24 @@ notify_notify (XfceNotifyGBus *skeleton,
         xndaemon->log_level == 1 &&
         xndaemon->log_level_apps <= 1 &&
         transient == FALSE)
-        xfce_notify_log_insert (new_app_name, summary, body,
+        expidus_notify_log_insert (new_app_name, summary, body,
                                 image_data, image_path, app_icon,
                                 desktop_id, expire_timeout, actions,
                                 xndaemon->log_max_size);
 
-    xfce_notify_window_set_icon_only(window, x_canonical);
+    expidus_notify_window_set_icon_only(window, x_canonical);
 
-    xfce_notify_window_set_do_fadeout(window, xndaemon->do_fadeout, xndaemon->do_slideout);
-    xfce_notify_window_set_notify_location(window, xndaemon->notify_location);
+    expidus_notify_window_set_do_fadeout(window, xndaemon->do_fadeout, xndaemon->do_slideout);
+    expidus_notify_window_set_notify_location(window, xndaemon->notify_location);
 
     if (value_hint_set)
-        xfce_notify_window_set_gauge_value(window, value_hint, xndaemon->css_provider);
+        expidus_notify_window_set_gauge_value(window, value_hint, xndaemon->css_provider);
     else
-        xfce_notify_window_unset_gauge_value(window);
+        expidus_notify_window_unset_gauge_value(window);
 
     gtk_widget_realize(GTK_WIDGET(window));
 
-    xfce_notify_gbus_complete_notify(skeleton, invocation, OUT_id);
+    expidus_notify_gbus_complete_notify(skeleton, invocation, OUT_id);
 
     if (image_data)
       g_variant_unref (image_data);
@@ -1378,30 +1378,30 @@ notify_notify (XfceNotifyGBus *skeleton,
 }
 
 
-static gboolean notify_close_notification (XfceNotifyGBus *skeleton,
+static gboolean notify_close_notification (ExpidusNotifyGBus *skeleton,
                                            GDBusMethodInvocation   *invocation,
                                            guint id,
-                                           XfceNotifyDaemon *xndaemon)
+                                           ExpidusNotifyDaemon *xndaemon)
 {
-    XfceNotifyWindow *window = g_tree_lookup(xndaemon->active_notifications,
+    ExpidusNotifyWindow *window = g_tree_lookup(xndaemon->active_notifications,
                                              GUINT_TO_POINTER(id));
 
     if(window)
-        xfce_notify_window_closed(window, XFCE_NOTIFY_CLOSE_REASON_CLIENT);
+        expidus_notify_window_closed(window, EXPIDUS_NOTIFY_CLOSE_REASON_CLIENT);
 
-    xfce_notify_gbus_complete_close_notification(skeleton, invocation);
+    expidus_notify_gbus_complete_close_notification(skeleton, invocation);
 
     return TRUE;
 }
 
-static gboolean notify_get_server_information (XfceNotifyGBus *skeleton,
+static gboolean notify_get_server_information (ExpidusNotifyGBus *skeleton,
                                                GDBusMethodInvocation   *invocation,
-                                               XfceNotifyDaemon *xndaemon)
+                                               ExpidusNotifyDaemon *xndaemon)
 {
-    xfce_notify_gbus_complete_get_server_information(skeleton,
+    expidus_notify_gbus_complete_get_server_information(skeleton,
                                                      invocation,
-                                                     "Xfce Notify Daemon",
-                                                     "Xfce",
+                                                     "Expidus Notify Daemon",
+                                                     "Expidus",
                                                      VERSION,
                                                      NOTIFICATIONS_SPEC_VERSION);
 
@@ -1409,7 +1409,7 @@ static gboolean notify_get_server_information (XfceNotifyGBus *skeleton,
 }
 
 
-static void daemon_quit (XfceNotifyDaemon *xndaemon)
+static void daemon_quit (ExpidusNotifyDaemon *xndaemon)
 {
     gint i, main_level = gtk_main_level();
     for(i = 0; i < main_level; ++i)
@@ -1417,18 +1417,18 @@ static void daemon_quit (XfceNotifyDaemon *xndaemon)
 }
 
 
-static gboolean notify_quit (XfceNotifyOrgXfceNotifyd *skeleton,
+static gboolean notify_quit (ExpidusNotifyOrgExpidusNotifyd *skeleton,
                              GDBusMethodInvocation   *invocation,
-                             XfceNotifyDaemon *xndaemon)
+                             ExpidusNotifyDaemon *xndaemon)
 {
-    xfce_notify_org_xfce_notifyd_complete_quit (skeleton, invocation);
+    expidus_notify_org_expidus_notifyd_complete_quit (skeleton, invocation);
     daemon_quit(xndaemon);
     return TRUE;
 }
 
 
 static void
-xfce_notify_daemon_set_theme(XfceNotifyDaemon *xndaemon,
+expidus_notify_daemon_set_theme(ExpidusNotifyDaemon *xndaemon,
                              const gchar *theme)
 {
     GError *error = NULL;
@@ -1437,16 +1437,16 @@ xfce_notify_daemon_set_theme(XfceNotifyDaemon *xndaemon,
 
     DBG("New theme: %s", theme);
 
-    file = g_build_filename(xfce_get_homedir(), ".themes", theme,
-                            "xfce-notify-4.0", "gtk.css", NULL);
+    file = g_build_filename(expidus_get_homedir(), ".themes", theme,
+                            "expidus-notify-4.0", "gtk.css", NULL);
 
     xndaemon->is_default_theme = (g_strcmp0("Default", theme) == 0);
 
     if (!g_file_test(file, G_FILE_TEST_EXISTS)) {
 
         g_free (file);
-        file = g_strconcat("themes/", theme, "/xfce-notify-4.0/gtk.css", NULL);
-        files = xfce_resource_lookup_all(XFCE_RESOURCE_DATA, file);
+        file = g_strconcat("themes/", theme, "/expidus-notify-4.0/gtk.css", NULL);
+        files = expidus_resource_lookup_all(EXPIDUS_RESOURCE_DATA, file);
         g_free(file);
         if (!files || !files[0])
         {
@@ -1477,12 +1477,12 @@ xfce_notify_daemon_set_theme(XfceNotifyDaemon *xndaemon,
 
 
 static void
-xfce_notify_daemon_settings_changed(XfconfChannel *channel,
+expidus_notify_daemon_settings_changed(XfconfChannel *channel,
                                     const gchar *property,
                                     const GValue *value,
                                     gpointer user_data)
 {
-    XfceNotifyDaemon *xndaemon = user_data;
+    ExpidusNotifyDaemon *xndaemon = user_data;
 
     if(!strcmp(property, "/expire-timeout")) {
         xndaemon->expire_timeout = G_VALUE_TYPE(value)
@@ -1493,7 +1493,7 @@ xfce_notify_daemon_settings_changed(XfconfChannel *channel,
         xndaemon->initial_opacity = G_VALUE_TYPE(value)
                                   ? g_value_get_double(value) : 0.9;
     } else if(!strcmp(property, "/theme")) {
-        xfce_notify_daemon_set_theme(xndaemon,
+        expidus_notify_daemon_set_theme(xndaemon,
                                      G_VALUE_TYPE(value)
                                      ? g_value_get_string(value)
                                      : "Default");
@@ -1538,12 +1538,12 @@ xfce_notify_daemon_settings_changed(XfconfChannel *channel,
 
 
 static gboolean
-xfce_notify_daemon_load_config (XfceNotifyDaemon *xndaemon,
+expidus_notify_daemon_load_config (ExpidusNotifyDaemon *xndaemon,
                                	GError **error)
 {
     gchar *theme;
 
-    xndaemon->settings = xfconf_channel_new("xfce4-notifyd");
+    xndaemon->settings = xfconf_channel_new("expidus1-notifyd");
 
     xndaemon->expire_timeout = xfconf_channel_get_int(xndaemon->settings,
                                                     "/expire-timeout",
@@ -1557,7 +1557,7 @@ xfce_notify_daemon_load_config (XfceNotifyDaemon *xndaemon,
 
     theme = xfconf_channel_get_string(xndaemon->settings,
                                       "/theme", "Default");
-    xfce_notify_daemon_set_theme(xndaemon, theme);
+    expidus_notify_daemon_set_theme(xndaemon, theme);
     g_free(theme);
 
     xndaemon->notify_location = xfconf_channel_get_uint(xndaemon->settings,
@@ -1593,7 +1593,7 @@ xfce_notify_daemon_load_config (XfceNotifyDaemon *xndaemon,
     xfconf_channel_reset_property (xndaemon->settings, "/backlog", TRUE);
 
     g_signal_connect(G_OBJECT(xndaemon->settings), "property-changed",
-                     G_CALLBACK(xfce_notify_daemon_settings_changed),
+                     G_CALLBACK(expidus_notify_daemon_settings_changed),
                      xndaemon);
 
     return TRUE;
@@ -1603,12 +1603,12 @@ xfce_notify_daemon_load_config (XfceNotifyDaemon *xndaemon,
 
 
 
-XfceNotifyDaemon *
-xfce_notify_daemon_new_unique(GError **error)
+ExpidusNotifyDaemon *
+expidus_notify_daemon_new_unique(GError **error)
 {
-    XfceNotifyDaemon *xndaemon = g_object_new(XFCE_TYPE_NOTIFY_DAEMON, NULL);
+    ExpidusNotifyDaemon *xndaemon = g_object_new(EXPIDUS_TYPE_NOTIFY_DAEMON, NULL);
 
-    if(!xfce_notify_daemon_load_config(xndaemon, error))
+    if(!expidus_notify_daemon_load_config(xndaemon, error))
     {
         g_object_unref(G_OBJECT(xndaemon));
         return NULL;

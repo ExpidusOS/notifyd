@@ -5,7 +5,7 @@ echo '/tmp/core_%e.%p' | sudo tee /proc/sys/kernel/core_pattern
 ulimit -c unlimited
 
 # run gdb to read the coredump, e.g.
-# gdb ../xfce4-notifyd/xfce4-notifyd /tmp/core_xfce4-notifyd.20126
+# gdb ../expidus1-notifyd/expidus1-notifyd /tmp/core_expidus1-notifyd.20126
 
 die () {
 echo $1
@@ -22,11 +22,11 @@ for i in {1..10}; do
 
   # make sure to kill notifyd in case it's already running in a different version
   # than what we currently want to test
-  killall -q xfce4-notifyd;
+  killall -q expidus1-notifyd;
   # reset the known applications property, to see if values get inserted correctly
-  xfconf-query -c xfce4-notifyd -p /applications/known_applications -r;
+  xfconf-query -c expidus1-notifyd -p /applications/known_applications -r;
 
-  ../xfce4-notifyd/xfce4-notifyd &
+  ../expidus1-notifyd/expidus1-notifyd &
   PID=$!
 
   # check if notifyd just died on startup
@@ -46,10 +46,10 @@ for i in {1..10}; do
 
   # check if the known applications were recorded
   ps -p $PID >/dev/null 2>&1 || die "DIED after send" 2
-  if [ $(xfconf-query -c xfce4-notifyd -p /applications/known_applications | wc -l) -eq 0 ]; then
+  if [ $(xfconf-query -c expidus1-notifyd -p /applications/known_applications | wc -l) -eq 0 ]; then
    die "no known application"  3
   fi
 
-  killall -q xfce4-notifyd;
+  killall -q expidus1-notifyd;
 done;
 popd

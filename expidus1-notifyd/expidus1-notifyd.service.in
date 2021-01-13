@@ -1,0 +1,7 @@
+[Unit]
+Description=EXPIDUS notifications service
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.Notifications
+ExecStart=@notifydir@/expidus1-notifyd

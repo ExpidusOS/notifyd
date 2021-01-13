@@ -22,74 +22,74 @@ distclean_intltool = \
 distuninstallcheck_listfiles = \
 	find . -type f -print | grep -v ./share/icons/hicolor/icon-theme.cache
 
-xfce4_notifyddir = $(HELPER_PATH_PREFIX)/xfce4/notifyd
-xfce4_notifyd_PROGRAMS = xfce4-notifyd/xfce4-notifyd
-bin_PROGRAMS = xfce4-notifyd-config/xfce4-notifyd-config
+expidus1_notifyddir = $(HELPER_PATH_PREFIX)/expidus1/notifyd
+expidus1_notifyd_PROGRAMS = expidus1-notifyd/expidus1-notifyd
+bin_PROGRAMS = expidus1-notifyd-config/expidus1-notifyd-config
 
-xfce4_notifyd_xfce4_notifyd_SOURCES = \
-	xfce4-notifyd/main.c \
-	xfce4-notifyd/xfce-notify-gbus.c \
-	xfce4-notifyd/xfce-notify-gbus.h \
-	xfce4-notifyd/xfce-notify-daemon.c \
-	xfce4-notifyd/xfce-notify-daemon.h \
-	xfce4-notifyd/xfce-notify-enum-types.c \
-	xfce4-notifyd/xfce-notify-enum-types.h \
-	xfce4-notifyd/xfce-notify-marshal.c \
-	xfce4-notifyd/xfce-notify-marshal.h \
-	xfce4-notifyd/xfce-notify-window.c \
-	xfce4-notifyd/xfce-notify-window.h
+expidus1_notifyd_expidus1_notifyd_SOURCES = \
+	expidus1-notifyd/main.c \
+	expidus1-notifyd/expidus-notify-gbus.c \
+	expidus1-notifyd/expidus-notify-gbus.h \
+	expidus1-notifyd/expidus-notify-daemon.c \
+	expidus1-notifyd/expidus-notify-daemon.h \
+	expidus1-notifyd/expidus-notify-enum-types.c \
+	expidus1-notifyd/expidus-notify-enum-types.h \
+	expidus1-notifyd/expidus-notify-marshal.c \
+	expidus1-notifyd/expidus-notify-marshal.h \
+	expidus1-notifyd/expidus-notify-window.c \
+	expidus1-notifyd/expidus-notify-window.h
 
-xfce4_notifyd_config_xfce4_notifyd_config_SOURCES = \
-	xfce4-notifyd-config/main.c \
-	xfce4-notifyd-config/xfce4-notifyd-config.ui.h
+expidus1_notifyd_config_expidus1_notifyd_config_SOURCES = \
+	expidus1-notifyd-config/main.c \
+	expidus1-notifyd-config/expidus1-notifyd-config.ui.h
 
 common_cflags = \
 	-I$(builddir)	\
 	-DLOCALEDIR=\"$(localedir)\" \
-	$(LIBXFCE4UTIL_CFLAGS) \
-	$(XFCONF_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
+	$(ESCONF_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
 	$(GTK3_CFLAGS)
 
-xfce4_notifyd_xfce4_notifyd_CFLAGS = \
-	-DG_LOG_DOMAIN=\"xfce4-notifyd\" \
+expidus1_notifyd_expidus1_notifyd_CFLAGS = \
+	-DG_LOG_DOMAIN=\"expidus1-notifyd\" \
 	$(common_cflags) \
 	$(LIBX11_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GIO_UNIX_CFLAGS)
 
 
-xfce4_notifyd_config_xfce4_notifyd_config_CFLAGS = \
-	-DG_LOG_DOMAIN=\"xfce4-notifyd-config\" \
+expidus1_notifyd_config_expidus1_notifyd_config_CFLAGS = \
+	-DG_LOG_DOMAIN=\"expidus1-notifyd-config\" \
 	$(LIBNOTIFY_CFLAGS) \
 	$(common_cflags)
 
 common_ldadd = \
-	$(top_builddir)/common/libxfce-notifyd-common.la \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(XFCONF_LIBS) \
-	$(LIBXFCE4UI_LIBS) \
+	$(top_builddir)/common/libexpidus-notifyd-common.la \
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(ESCONF_LIBS) \
+	$(LIBEXPIDUS1UI_LIBS) \
 	$(GTK3_LIBS)
 
-xfce4_notifyd_xfce4_notifyd_LDADD = \
+expidus1_notifyd_expidus1_notifyd_LDADD = \
 	$(common_ldadd) \
 	$(LIBX11_LIBS)	\
 	$(GIO_LIBS) \
 	$(GIO_UNIX_LIBS)
 
-xfce4_notifyd_config_xfce4_notifyd_config_LDADD = \
+expidus1_notifyd_config_expidus1_notifyd_config_LDADD = \
 	$(common_ldadd) \
 	$(LIBNOTIFY_LIBS)
 
-service_in_files = xfce4-notifyd/org.xfce.xfce4-notifyd.Notifications.service.in
-systemd_user_in_files = xfce4-notifyd/xfce4-notifyd.service.in
+service_in_files = expidus1-notifyd/org.expidus.expidus1-notifyd.Notifications.service.in
+systemd_user_in_files = expidus1-notifyd/expidus1-notifyd.service.in
 dist_service = \
 	$(service_in_files) \
 	$(systemd_user_in_files) \
-	xfce4-notifyd/notify-dbus.xml \
-	xfce4-notifyd/xfce-notify-marshal.list
+	expidus1-notifyd/notify-dbus.xml \
+	expidus1-notifyd/expidus-notify-marshal.list
 
-autostart_in_files = xfce4-notifyd/xfce4-notifyd.desktop.in
+autostart_in_files = expidus1-notifyd/expidus1-notifyd.desktop.in
 dist_autostart = \
 	$(autostart_in_files)
 
@@ -109,10 +109,10 @@ distclean_autostart = $(autostart_DATA)
 endif
 
 dist_man1_MANS = \
-	xfce4-notifyd-config/xfce4-notifyd-config.1
+	expidus1-notifyd-config/expidus1-notifyd-config.1
 
 desktopdir = $(datadir)/applications
-desktop_in_files = xfce4-notifyd-config/xfce4-notifyd-config.desktop.in
+desktop_in_files = expidus1-notifyd-config/expidus1-notifyd-config.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
@@ -125,19 +125,19 @@ else
 theme_dir = gtk-3.0
 endif
 
-brightthemedir = $(datadir)/themes/Bright/xfce-notify-4.0
+brightthemedir = $(datadir)/themes/Bright/expidus-notify-4.0
 dist_brighttheme_DATA = themes/$(theme_dir)/Bright/gtk.css
 
-defaultthemedir = $(datadir)/themes/Default/xfce-notify-4.0
+defaultthemedir = $(datadir)/themes/Default/expidus-notify-4.0
 dist_defaulttheme_DATA = themes/$(theme_dir)/Default/gtk.css
 
-retrothemedir = $(datadir)/themes/Retro/xfce-notify-4.0
+retrothemedir = $(datadir)/themes/Retro/expidus-notify-4.0
 dist_retrotheme_DATA = themes/$(theme_dir)/Retro/gtk.css
 
-smokethemedir = $(datadir)/themes/Smoke/xfce-notify-4.0
+smokethemedir = $(datadir)/themes/Smoke/expidus-notify-4.0
 dist_smoketheme_DATA = themes/$(theme_dir)/Smoke/gtk.css
 
-zomgponiesthemedir = $(datadir)/themes/ZOMG-PONIES!/xfce-notify-4.0
+zomgponiesthemedir = $(datadir)/themes/ZOMG-PONIES!/expidus-notify-4.0
 dist_zomgponiestheme_DATA = themes/$(theme_dir)/ZOMG-PONIES!/gtk.css
 
 dist_themes = \
@@ -152,36 +152,36 @@ dist_themes = \
 	themes/gtk-3.20/Smoke/gtk.css \
 	themes/gtk-3.20/ZOMG-PONIES!/gtk.css
 
-built_xfce4_notifyd = \
-	xfce4-notifyd/xfce-notify-gbus.c \
-	xfce4-notifyd/xfce-notify-gbus.h
+built_expidus1_notifyd = \
+	expidus1-notifyd/expidus-notify-gbus.c \
+	expidus1-notifyd/expidus-notify-gbus.h
 
-clean_xfce4_notifyd = \
-	$(built_xfce4_notifyd)
+clean_expidus1_notifyd = \
+	$(built_expidus1_notifyd)
 
 if MAINTAINER_MODE
 
-built_xfce4_notifyd += \
-	xfce4-notifyd/xfce-notify-marshal.c \
-	xfce4-notifyd/xfce-notify-marshal.h \
-	xfce4-notifyd/xfce-notify-enum-types.c \
-	xfce4-notifyd/xfce-notify-enum-types.h
+built_expidus1_notifyd += \
+	expidus1-notifyd/expidus-notify-marshal.c \
+	expidus1-notifyd/expidus-notify-marshal.h \
+	expidus1-notifyd/expidus-notify-enum-types.c \
+	expidus1-notifyd/expidus-notify-enum-types.h
 
-built_xfce4_notifyd_config = \
-	xfce4-notifyd-config/xfce4-notifyd-config.ui.h
+built_expidus1_notifyd_config = \
+	expidus1-notifyd-config/expidus1-notifyd-config.ui.h
 
-clean_xfce4_notifyd += \
-	xfce4-notifyd/stamp-xfce-notify-enum-types.h \
-	xfce4-notifyd/stamp-xfce-notify-marshal.h
+clean_expidus1_notifyd += \
+	expidus1-notifyd/stamp-expidus-notify-enum-types.h \
+	expidus1-notifyd/stamp-expidus-notify-marshal.h
 
 endif
 
-clean_xfce4_notifyd_config = \
-	$(built_xfce4_notifyd_config) \
+clean_expidus1_notifyd_config = \
+	$(built_expidus1_notifyd_config) \
 	$(desktop_DATA)
 
-dist_xfce4_notifyd_config = \
-	xfce4-notifyd-config/xfce4-notifyd-config.glade \
+dist_expidus1_notifyd_config = \
+	expidus1-notifyd-config/expidus1-notifyd-config.glade \
 	$(desktop_in_files)
 
 dist_noinst_DATA = \
@@ -189,84 +189,84 @@ dist_noinst_DATA = \
 	$(dist_intltool) \
 	$(dist_service) \
 	$(dist_autostart) \
-	$(dist_xfce4_notifyd_config) \
+	$(dist_expidus1_notifyd_config) \
 	$(dist_themes)
 
 dist_noinst_SCRIPTS = \
 	$(dist_autogen)
 
 BUILT_SOURCES = \
-	$(built_xfce4_notifyd) \
-	$(built_xfce4_notifyd_config)
+	$(built_expidus1_notifyd) \
+	$(built_expidus1_notifyd_config)
 
 CLEANFILES = \
-	$(clean_xfce4_notifyd) \
-	$(clean_xfce4_notifyd_config)
+	$(clean_expidus1_notifyd) \
+	$(clean_expidus1_notifyd_config)
 
 DISTCLEANFILES = \
 	$(distclean_intltool) \
 	$(distclean_service) \
 	$(distclean_autostart)
 
-xfce4-notifyd/xfce-notify-gbus.h:
-xfce4-notifyd/xfce-notify-gbus.c: $(srcdir)/xfce4-notifyd/notify-dbus.xml Makefile
+expidus1-notifyd/expidus-notify-gbus.h:
+expidus1-notifyd/expidus-notify-gbus.c: $(srcdir)/expidus1-notifyd/notify-dbus.xml Makefile
 	$(AM_V_GEN) $(GDBUS_CODEGEN) \
 	--interface-prefix org.freedesktop.Notifications \
-	--c-namespace XfceNotify 	\
-	--generate-c-code xfce4-notifyd/xfce-notify-gbus \
-	$(srcdir)/xfce4-notifyd/notify-dbus.xml
+	--c-namespace ExpidusNotify 	\
+	--generate-c-code expidus1-notifyd/expidus-notify-gbus \
+	$(srcdir)/expidus1-notifyd/notify-dbus.xml
 
 if MAINTAINER_MODE
 
-xfce4-notifyd/xfce-notify-marshal.h: xfce4-notifyd/stamp-xfce-notify-marshal.h
+expidus1-notifyd/expidus-notify-marshal.h: expidus1-notifyd/stamp-expidus-notify-marshal.h
 	@true
 
-xfce4-notifyd/stamp-xfce-notify-marshal.h: $(srcdir)/xfce4-notifyd/xfce-notify-marshal.list Makefile
+expidus1-notifyd/stamp-expidus-notify-marshal.h: $(srcdir)/expidus1-notifyd/expidus-notify-marshal.list Makefile
 	$(AM_V_GEN) ( \
-	echo '/* this file is autogenerated -- do not edit */' > xfce4-notifyd/xfce-notify-marshal.h \
-  && glib-genmarshal --prefix=xfce_notify_marshal --header $(srcdir)/xfce4-notifyd/xfce-notify-marshal.list \
-  >> xfce4-notifyd/xfce-notify-marshal.h \
+	echo '/* this file is autogenerated -- do not edit */' > expidus1-notifyd/expidus-notify-marshal.h \
+  && glib-genmarshal --prefix=expidus_notify_marshal --header $(srcdir)/expidus1-notifyd/expidus-notify-marshal.list \
+  >> expidus1-notifyd/expidus-notify-marshal.h \
 	&& echo timestamp >$@ )
 
-xfce4-notifyd/xfce-notify-marshal.c: $(srcdir)/xfce4-notifyd/xfce-notify-marshal.list Makefile
+expidus1-notifyd/expidus-notify-marshal.c: $(srcdir)/expidus1-notifyd/expidus-notify-marshal.list Makefile
 	$(AM_V_GEN) ( \
 	echo '/* this file is autogenerated -- do not edit */' >$@ \
-	&& echo '#include "xfce-notify-marshal.h"' >$@ \
-	&& glib-genmarshal --prefix=xfce_notify_marshal --body $(srcdir)/xfce4-notifyd/xfce-notify-marshal.list >>$@ \
+	&& echo '#include "expidus-notify-marshal.h"' >$@ \
+	&& glib-genmarshal --prefix=expidus_notify_marshal --body $(srcdir)/expidus1-notifyd/expidus-notify-marshal.list >>$@ \
 	)
 
-xfce4-notifyd/xfce-notify-enum-types.h: $(srcdir)/xfce4-notifyd/stamp-xfce-notify-enum-types.h
+expidus1-notifyd/expidus-notify-enum-types.h: $(srcdir)/expidus1-notifyd/stamp-expidus-notify-enum-types.h
 	@true
 
-xfce4-notifyd/stamp-xfce-notify-enum-types.h: $(srcdir)/xfce4-notifyd/xfce-notify-window.h Makefile
+expidus1-notifyd/stamp-expidus-notify-enum-types.h: $(srcdir)/expidus1-notifyd/expidus-notify-window.h Makefile
 	$(AM_V_GEN) ( \
 	( cd $(srcdir) && glib-mkenums \
-	        --fhead "#ifndef __XFCE_NOTIFY_ENUM_TYPES_H__\n#define __XFCE_NOTIFY_ENUM_TYPES_H__\n#include <glib-object.h>\nG_BEGIN_DECLS\n" \
+	        --fhead "#ifndef __EXPIDUS_NOTIFY_ENUM_TYPES_H__\n#define __EXPIDUS_NOTIFY_ENUM_TYPES_H__\n#include <glib-object.h>\nG_BEGIN_DECLS\n" \
 	        --fprod "/* enumerations from \"@filename@\" */\n" \
-	        --vhead "GType @enum_name@_get_type(void) G_GNUC_CONST;\n#define XFCE_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" \
-	        --ftail "G_END_DECLS\n\n#endif /* __XFCE_NOTIFY_ENUM_TYPES_H__ */" \
-	        $(srcdir)/xfce4-notifyd/xfce-notify-window.h ) >> xfce4-notifyd/xgen-xneth \
-	&& ( cmp -s xfce4-notifyd/xgen-xneth xfce4-notifyd/xfce-notify-enum-types.h || cp xfce4-notifyd/xgen-xneth xfce4-notifyd/xfce-notify-enum-types.h ) \
-	&& rm -f xfce4-notifyd/xgen-xneth \
+	        --vhead "GType @enum_name@_get_type(void) G_GNUC_CONST;\n#define EXPIDUS_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" \
+	        --ftail "G_END_DECLS\n\n#endif /* __EXPIDUS_NOTIFY_ENUM_TYPES_H__ */" \
+	        $(srcdir)/expidus1-notifyd/expidus-notify-window.h ) >> expidus1-notifyd/xgen-xneth \
+	&& ( cmp -s expidus1-notifyd/xgen-xneth expidus1-notifyd/expidus-notify-enum-types.h || cp expidus1-notifyd/xgen-xneth expidus1-notifyd/expidus-notify-enum-types.h ) \
+	&& rm -f expidus1-notifyd/xgen-xneth \
 	&& echo timestamp >$@ \
 	)
 
-xfce4-notifyd/xfce-notify-enum-types.c: $(srcdir)/xfce4-notifyd/xfce-notify-window.h Makefile
+expidus1-notifyd/expidus-notify-enum-types.c: $(srcdir)/expidus1-notifyd/expidus-notify-window.h Makefile
 	$(AM_V_GEN) ( \
 	( cd $(srcdir) && glib-mkenums \
-	        --fhead "#include \"xfce-notify-enum-types.h\"\n#include \"xfce4-notifyd/xfce-notify-window.h\"\n" \
+	        --fhead "#include \"expidus-notify-enum-types.h\"\n#include \"expidus1-notifyd/expidus-notify-window.h\"\n" \
 	        --fprod "\n/* enumerations from \"@filename@\" */" \
 	        --vhead "GType\n@enum_name@_get_type(void)\n{\n\tstatic GType type = 0;\n\tif(type == 0) {\n\tstatic const G@Type@Value values[] = {"\
 	        --vprod "\t{ @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
 	        --vtail "\t{ 0, NULL, NULL }\n\t};\n\ttype = g_@type@_register_static(\"@EnumName@\", values);\n  }\n\treturn type;\n}\n" \
-	        $(srcdir)/xfce4-notifyd/xfce-notify-window.h ) >> xfce4-notifyd/xgen-xnetc \
-	&& cp xfce4-notifyd/xgen-xnetc xfce4-notifyd/xfce-notify-enum-types.c \
-	&& rm -f xfce4-notifyd/xgen-xnetc \
+	        $(srcdir)/expidus1-notifyd/expidus-notify-window.h ) >> expidus1-notifyd/xgen-xnetc \
+	&& cp expidus1-notifyd/xgen-xnetc expidus1-notifyd/expidus-notify-enum-types.c \
+	&& rm -f expidus1-notifyd/xgen-xnetc \
 	)
 
-xfce4-notifyd-config/xfce4-notifyd-config.ui.h: $(srcdir)/xfce4-notifyd-config/xfce4-notifyd-config.glade
+expidus1-notifyd-config/expidus1-notifyd-config.ui.h: $(srcdir)/expidus1-notifyd-config/expidus1-notifyd-config.glade
 	$(AM_V_GEN) ( \
-	xdt-csource --static --name=xfce4_notifyd_config_ui $< >$@ \
+	xdt-csource --static --name=expidus1_notifyd_config_ui $< >$@ \
 	)
 
 endif
@@ -282,11 +282,11 @@ install-data-hook:
 	    echo "***"; \
 	fi
 
-xfce4-notifyd/%.service: $(srcdir)/xfce4-notifyd/%.service.in Makefile
-	sed -e "s,\@notifydir\@,$(xfce4_notifyddir),g" < $< > $@
+expidus1-notifyd/%.service: $(srcdir)/expidus1-notifyd/%.service.in Makefile
+	sed -e "s,\@notifydir\@,$(expidus1_notifyddir),g" < $< > $@
 
-xfce4-notifyd/%.desktop: $(srcdir)/xfce4-notifyd/%.desktop.in Makefile
-	sed -e "s,\@notifydir\@,$(xfce4_notifyddir),g" < $< > $@
+expidus1-notifyd/%.desktop: $(srcdir)/expidus1-notifyd/%.desktop.in Makefile
+	sed -e "s,\@notifydir\@,$(expidus1_notifyddir),g" < $< > $@
 
 distclean-local:
 	-rm -rf *.cache *~

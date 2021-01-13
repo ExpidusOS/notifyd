@@ -1,7 +1,7 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
- *  Copyright (c) 2011 Jérôme Guelfucci <jeromeg@xfce.org>
+ *  Copyright (c) 2011 Jérôme Guelfucci <jeromeg@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

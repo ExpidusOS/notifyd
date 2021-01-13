@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+_Name=Notifications
+_Comment=Customize how notifications appear on your screen
+Exec=expidus1-notifyd-config
+Icon=org.expidus.notification
+Terminal=false
+StartupNotify=true
+Type=Application
+OnlyShowIn=EXPIDUS;
+Categories=EXPIDUS;GTK;Settings;DesktopSettings;X-EXPIDUS-SettingsDialog;X-EXPIDUS-PersonalSettings;
+X-ExpidusPluggable=true
+X-ExpidusHelpComponent=notifyd
+X-ExpidusHelpPage=start

@@ -1,27 +1,27 @@
 dnl configure.ac
 dnl
-dnl xfce4-notifyd - server-side implementation of the fd.o notifications spec
+dnl expidus1-notifyd - server-side implementation of the fd.o notifications spec
 dnl
 dnl Copyright (c) 2008 Brian Tarricone <brian@tarricone.org>
-dnl Copyright (c) 2019 Simon Steinbeiss <simon@xfce.org>
+dnl Copyright (c) 2019 Simon Steinbeiss <simon@expidus.org>
 dnl
 
 dnl version info
-m4_define([xfce4_notifyd_version_major], [0])
-m4_define([xfce4_notifyd_version_minor], [6])
-m4_define([xfce4_notifyd_version_micro], [2])
-m4_define([xfce4_notifyd_version_build], [@REVISION@])
-m4_define([xfce4_notifyd_version_tag], [git])
-m4_define([xfce4_notifyd_version], [xfce4_notifyd_version_major().xfce4_notifyd_version_minor().xfce4_notifyd_version_micro()ifelse(xfce4_notifyd_version_tag(), [git], [xfce4_notifyd_version_tag()-xfce4_notifyd_version_build()], [xfce4_notifyd_version_tag()])])
+m4_define([expidus1_notifyd_version_major], [1])
+m4_define([expidus1_notifyd_version_minor], [0])
+m4_define([expidus1_notifyd_version_micro], [0])
+m4_define([expidus1_notifyd_version_build], [@REVISION@])
+m4_define([expidus1_notifyd_version_tag], [git])
+m4_define([expidus1_notifyd_version], [expidus1_notifyd_version_major().expidus1_notifyd_version_minor().expidus1_notifyd_version_micro()ifelse(expidus1_notifyd_version_tag(), [git], [expidus1_notifyd_version_tag()-expidus1_notifyd_version_build()], [expidus1_notifyd_version_tag()])])
 
 m4_define([notifications_spec_version], [1.2])
 
 dnl init autoconf
-AC_INIT([xfce4-notifyd], [xfce4_notifyd_version],
-        [https://bugzilla.xfce.org/enter_bug.cgi?product=Xfce4-notifyd],
-        [xfce4-notifyd])
+AC_INIT([expidus1-notifyd], [expidus1_notifyd_version],
+        [https://bugzilla.expidus.org/enter_bug.cgi?product=Expidus1-notifyd],
+        [expidus1-notifyd])
 AC_PREREQ([2.59c])
-AC_CONFIG_SRCDIR([xfce4-notifyd/main.c])
+AC_CONFIG_SRCDIR([expidus1-notifyd/main.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([m4])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -63,10 +63,10 @@ dnl check for x11
 XDT_CHECK_LIBX11_REQUIRE()
 
 dnl required
-XDT_CHECK_PACKAGE([LIBXFCE4UTIL], [libxfce4util-1.0], [4.12.0])
-XDT_CHECK_PACKAGE([LIBXFCE4UI], [libxfce4ui-2], [4.12.0])
-XDT_CHECK_PACKAGE([LIBXFCE4PANEL], [libxfce4panel-2.0], [4.12.0])
-XDT_CHECK_PACKAGE([XFCONF], [libxfconf-0], [4.10.0])
+XDT_CHECK_PACKAGE([LIBEXPIDUS1UTIL], [libexpidus1util-1.0], [1.0.0])
+XDT_CHECK_PACKAGE([LIBEXPIDUS1UI], [libexpidus1ui-2], [1.0.0])
+XDT_CHECK_PACKAGE([LIBEXPIDUS1PANEL], [libexpidus1panel-2.0], [1.0.0])
+XDT_CHECK_PACKAGE([ESCONF], [libesconf-0], [1.0.0])
 XDT_CHECK_PACKAGE([GIO], [gio-2.0], [2.42.0])
 XDT_CHECK_PACKAGE([GIO_UNIX], [gio-unix-2.0], [2.42.0])
 XDT_CHECK_PACKAGE([LIBNOTIFY], [libnotify], [0.7.0])

@@ -2,21 +2,21 @@ AM_CPPFLAGS = \
 	-I${top_srcdir}
 
 noinst_LTLIBRARIES = \
-	libxfce-notifyd-common.la
+	libexpidus-notifyd-common.la
 
-libxfce_notifyd_common_la_SOURCES = \
-	xfce-notify-log.c \
-	xfce-notify-log.h
+libexpidus_notifyd_common_la_SOURCES = \
+	expidus-notify-log.c \
+	expidus-notify-log.h
 
-libxfce_notifyd_common_la_CFLAGS = \
-	$(LIBXFCE4UI_CFLAGS) \
+libexpidus_notifyd_common_la_CFLAGS = \
+	$(LIBEXPIDUS1UI_CFLAGS) \
 	$(GTK3_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
-libxfce_notifyd_common_la_LIBADD = \
-	$(LIBXFCE4UI_LIBS) \
+libexpidus_notifyd_common_la_LIBADD = \
+	$(LIBEXPIDUS1UI_LIBS) \
 	$(GTK3_LIBS)
 
-libxfce_notifyd_common_la_LDFLAGS = \
+libexpidus_notifyd_common_la_LDFLAGS = \
 	-no-undefined \
 	$(PLATFORM_LDFLAGS)

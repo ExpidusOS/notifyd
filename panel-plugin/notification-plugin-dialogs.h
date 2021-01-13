@@ -1,6 +1,6 @@
-/*  xfce4-notification-plugin
+/*  expidus1-notification-plugin
  *
- *  Copyright (C) 2017 Simon Steinbeiß <simon@xfce.org>
+ *  Copyright (C) 2017 Simon Steinbeiß <simon@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@
 G_BEGIN_DECLS
 
 void
-notification_plugin_configure    (XfcePanelPlugin *plugin,
+notification_plugin_configure    (ExpidusPanelPlugin *plugin,
                      NotificationPlugin    *notification_plugin);
 
 void
-notification_plugin_about        (XfcePanelPlugin *plugin);
+notification_plugin_about        (ExpidusPanelPlugin *plugin);
 
 G_END_DECLS
 

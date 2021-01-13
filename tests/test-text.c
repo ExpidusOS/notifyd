@@ -1,7 +1,7 @@
 /*
- *  xfce4-notifyd
+ *  expidus1-notifyd
  *
- *  Copyright (c) 2011 Jérôme Guelfucci <jeromeg@xfce.org>
+ *  Copyright (c) 2011 Jérôme Guelfucci <jeromeg@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ int main (int argc, char **argv)
                                           "<i>Italic</i>\n"
                                           "<b>Bold</b>\n"
                                           "<u>Underlined</u>\n"
-                                          "<a href=\"http://www.xfce.org\">Xfce Web site</a>",
+                                          "<a href=\"http://www.expidus.org\">Expidus Web site</a>",
                                           NULL);
 
   if (!notify_notification_show (notification, NULL))

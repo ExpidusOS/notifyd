@@ -40,7 +40,7 @@
 - Fix logging simultaneous notifications (Bug #15167)
 - Disable rounded corners w/o compositing (Bug #16586)
 - panel-plugin: Fix configure dialog
-- panel-plugin: Use new XfceTitledDialog api
+- panel-plugin: Use new ExpidusTitledDialog api
 - panel-plugin: Toggle 'Do not disturb' with middle mouse click (Bug 
   #16132)
 - Allow compilation with panel 4.15
@@ -53,7 +53,7 @@
   Portuguese, Portuguese (Brazil), Serbian, Slovak, Slovenian, Spanish,
   Turkish, Ukrainian
 
--- Switch to standard Xfce News format
+-- Switch to standard Expidus News format
 
 Version 0.4.4 (22 April 2019):
   This is a bugfix release.
@@ -64,7 +64,7 @@ Version 0.4.4 (22 April 2019):
     * panel plugin: Fix menu position
     * panel-plugin: Fix first log entry not being shown (Bug #14920)
     * Fix Chrome notification icons (Bug #15215)
-    * Fix output of xfce4-notifyd-config --help (Bug #14922)
+    * Fix output of expidus1-notifyd-config --help (Bug #14922)
     * Get rid of gdk_error_trap* deprecations
     * Add fallback for label alignment and older Gtk+3
     * Fix icon-size in the log toolbar
@@ -95,7 +95,7 @@ Version 0.4.2 (01 March 2018):
     * Fix support for hyperlinks in notifications (Bug #14073)
     * Fix crash because of double-free (Bug #14060)
     * Improve wrapping and ellipsizing of notification bubble (Bug #12674)
-    * Ensure xfce4-notifyd.desktop.in goes into the tarball (Bug #13989)
+    * Ensure expidus1-notifyd.desktop.in goes into the tarball (Bug #13989)
     * Suppress warnings about unused and uninitialized variables (Bug #14095)
     * Fix crash when there are no known apps
     * panel-plugin: Fix showing placeholder when there are no logs from today
@@ -124,7 +124,7 @@ Version 0.4.1 (09 December 2017):
     * Treat icon_data only as pen-ultimate fallback option (Bug #13950)
     * Fix warning about gdk_window_get_origin (Bug #13935)
     * Ensure body and summary of notifications are correctly ellipsized (Bug #12674)
-    * Ensure the panel plugin icon resizes with Xfce 4.12
+    * Ensure the panel plugin icon resizes with Expidus 4.12
 
   Updated translations: Bulgarian, Catalan, Chinese (Taiwan), Croatian,
   Czech, Danish, Dutch (Flemish), French, German, Greek, Hebrew, Italian,
@@ -256,7 +256,7 @@ Version 0.3.1 (06 September 2016):
 
 Version 0.3.0 (27 July 2016):
   Ported to gdbus and Gtk+3 by Ali Abdallah
-  Bumped Dependencies (libxfce4ui 4.12, Gtk+3.14)
+  Bumped Dependencies (libexpidus1ui 4.12, Gtk+3.14)
 
   Features:
     * Better theming capabilities
@@ -265,7 +265,7 @@ Version 0.3.0 (27 July 2016):
 
   Bugs fixed:
     * The preview button now shows even when the dialog is plugged in
-      the xfce4-settings-manager
+      the expidus1-settings-manager
     * On update reset fade as well (Bug #11858)
 
   Updated translations: Arabic, Asturian, Bulgarian, Catalan, Chinese
@@ -289,7 +289,7 @@ Version 0.2.3 (21 April 2013):
   show improved notification previews.
 
   Features:o
-    * Add a category to the settings dialog for Xfce4 Settings Manager.
+    * Add a category to the settings dialog for Expidus1 Settings Manager.
     * Add widget names to summary ("summary") and body ("body") widgets
       to allow easier theming. Remove the redundant / buggy summary-bold
       style property (bug #8431).
@@ -342,11 +342,11 @@ Version 0.2.1 (02 Feb 2011):
 Version 0.2.0 (27 Nov 2010):
 
   Features:
-    * Added man page for xfce4-notifyd-config from Evgeni Golov.
+    * Added man page for expidus1-notifyd-config from Evgeni Golov.
     * Support the 'reason' parameter of the NotificationChanged signal.
       Note that if you are using libnotify 0.4.4 or older, this will
       cause memory leaks in *applications* that use libnotify (not in
-      xfce4-notifyd).  In this case, you should compile xfce4-notifyd
+      expidus1-notifyd).  In this case, you should compile expidus1-notifyd
       passing the --enable-old-notification-closed-signature switch
       to configure.
     * Add summary-bold style property to allow themes to set the
@@ -363,7 +363,7 @@ Version 0.2.0 (27 Nov 2010):
       there are multiple on the screen.  This also uses a custom workarea
       calculation to avoid placing notifications where docked windows have
       set struts (Jérôme Guelfucci, bug 5248).
-    * Port to libxfce4ui, drop libxfcegui4 dep (Romain Bouvier, bug 6375).
+    * Port to libexpidus1ui, drop libexpidusgui4 dep (Romain Bouvier, bug 6375).
     * Add a preview button to the preferences dialog.
 
   Bugfixes:
@@ -385,7 +385,7 @@ Version 0.1.0 (24 Nov 2008):
     * el: Stavros Giannouris <stavrosg@hellug.gr>
     * es: Abel Martín <abel.martin.ruiz@gmail.com>
     * fi: Jari Rahkonen <jari.rahkonen@pp1.inet.fi>
-    * fr: Maximilian Schleiss <maximilian@xfce.org>
+    * fr: Maximilian Schleiss <maximilian@expidus.org>
     * id: Andhika Padmawan <andhika.padmawan@gmail.com>
     * nb: Terje Uriansrud <terje@uriansrud.net>
     * nl: Vincent Tunru <projects@vinnl.nl>

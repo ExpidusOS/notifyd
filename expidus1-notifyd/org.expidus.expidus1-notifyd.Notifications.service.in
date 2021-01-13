@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.Notifications
+Exec=@notifydir@/expidus1-notifyd
+SystemdService=expidus1-notifyd.service

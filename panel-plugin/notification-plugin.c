@@ -1,6 +1,6 @@
-/*  xfce4-notification-plugin
+/*  expidus1-notification-plugin
  *
- *  Copyright (C) 2017 Simon Steinbeiß <simon@xfce.org>
+ *  Copyright (C) 2017 Simon Steinbeiß <simon@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@
 
 #include <gtk/gtk.h>
 #include <xfconf/xfconf.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "notification-plugin.h"
 #include "notification-plugin-log.h"
@@ -35,10 +35,10 @@
 
 /* prototypes */
 static void
-notification_plugin_construct (XfcePanelPlugin *panel_plugin);
+notification_plugin_construct (ExpidusPanelPlugin *panel_plugin);
 
 /* register the plugin */
-XFCE_PANEL_PLUGIN_REGISTER (notification_plugin_construct);
+EXPIDUS_PANEL_PLUGIN_REGISTER (notification_plugin_construct);
 
 GtkWidget *notification_plugin_menu_new   (NotificationPlugin *notification_plugin);
 void       notification_plugin_popup_menu (NotificationPlugin *notification_plugin);
@@ -69,15 +69,15 @@ notification_plugin_popup_menu (NotificationPlugin *notification_plugin)
 #if GTK_CHECK_VERSION (3, 22, 0)
   gtk_menu_popup_at_widget (GTK_MENU (notification_plugin->menu),
                             notification_plugin->button,
-                            xfce_panel_plugin_get_orientation (notification_plugin->plugin) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (notification_plugin->plugin) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             NULL);
 #else
   gtk_menu_popup (GTK_MENU (notification_plugin->menu), NULL, NULL,
-                  xfce_panel_plugin_position_menu, notification_plugin, 0, 0);
+                  expidus_panel_plugin_position_menu, notification_plugin, 0, 0);
 #endif
-  xfce_panel_plugin_register_menu (notification_plugin->plugin,
+  expidus_panel_plugin_register_menu (notification_plugin->plugin,
                                    GTK_MENU (notification_plugin->menu));
 }
 
@@ -200,7 +200,7 @@ notification_plugin_log_file_changed (GFileMonitor     *monitor,
 
 
 static NotificationPlugin *
-notification_plugin_new (XfcePanelPlugin *panel_plugin)
+notification_plugin_new (ExpidusPanelPlugin *panel_plugin)
 {
   NotificationPlugin    *notification_plugin;
   GFile                 *log_file;
@@ -214,14 +214,14 @@ notification_plugin_new (XfcePanelPlugin *panel_plugin)
 
   /* Initialize xfconf */
   xfconf_init (NULL);
-  notification_plugin->channel = xfconf_channel_new ("xfce4-notifyd");
+  notification_plugin->channel = xfconf_channel_new ("expidus1-notifyd");
 
   /* As the plugin is starting up we presume there are no new notifications */
   notification_plugin->new_notifications = FALSE;
 
   /* Create the panel widgets (image-button) */
-  xfce_panel_plugin_set_small (panel_plugin, TRUE);
-  notification_plugin->button = xfce_panel_create_toggle_button ();
+  expidus_panel_plugin_set_small (panel_plugin, TRUE);
+  notification_plugin->button = expidus_panel_create_toggle_button ();
   gtk_widget_set_tooltip_text (GTK_WIDGET (notification_plugin->button), _("Notifications"));
   notification_plugin->image = gtk_image_new ();
   state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
@@ -230,12 +230,12 @@ notification_plugin_new (XfcePanelPlugin *panel_plugin)
   gtk_container_add (GTK_CONTAINER (notification_plugin->button), notification_plugin->image);
   gtk_container_add (GTK_CONTAINER (panel_plugin), notification_plugin->button);
   gtk_widget_show_all (GTK_WIDGET (notification_plugin->button));
-  gtk_widget_set_name (GTK_WIDGET (notification_plugin->button), "xfce4-notification-plugin");
+  gtk_widget_set_name (GTK_WIDGET (notification_plugin->button), "expidus1-notification-plugin");
 
   /* Create the menu */
   notification_plugin->menu = notification_plugin_menu_new (notification_plugin);
   gtk_menu_attach_to_widget (GTK_MENU (notification_plugin->menu), notification_plugin->button, NULL);
-  gtk_widget_set_name (GTK_WIDGET (notification_plugin->menu), "xfce4-notification-plugin-menu");
+  gtk_widget_set_name (GTK_WIDGET (notification_plugin->menu), "expidus1-notification-plugin-menu");
 
   g_signal_connect (notification_plugin->button, "button-press-event",
                     G_CALLBACK (cb_button_pressed), notification_plugin);
@@ -245,7 +245,7 @@ notification_plugin_new (XfcePanelPlugin *panel_plugin)
                     G_CALLBACK (cb_menu_size_allocate), notification_plugin);
 
   /* Start monitoring the log file for changes */
-  notify_log_path = xfce_resource_lookup (XFCE_RESOURCE_CACHE, XFCE_NOTIFY_LOG_FILE);
+  notify_log_path = expidus_resource_lookup (EXPIDUS_RESOURCE_CACHE, EXPIDUS_NOTIFY_LOG_FILE);
   log_file = g_file_new_for_path (notify_log_path);
   log_file_monitor = g_file_monitor_file (log_file, G_FILE_MONITOR_NONE, NULL, NULL);
   g_signal_connect (log_file_monitor, "changed",
@@ -261,7 +261,7 @@ notification_plugin_new (XfcePanelPlugin *panel_plugin)
 
 
 static void
-notification_plugin_free (XfcePanelPlugin *plugin,
+notification_plugin_free (ExpidusPanelPlugin *plugin,
                           NotificationPlugin    *notification_plugin)
 {
   GtkWidget *dialog;
@@ -285,11 +285,11 @@ notification_plugin_free (XfcePanelPlugin *plugin,
 
 
 static gboolean
-notification_plugin_size_changed (XfcePanelPlugin       *plugin,
+notification_plugin_size_changed (ExpidusPanelPlugin       *plugin,
                                   gint                   size,
                                   NotificationPlugin    *notification_plugin)
 {
-#if !LIBXFCE4PANEL_CHECK_VERSION (4, 13, 0)
+#if !LIBEXPIDUS1PANEL_CHECK_VERSION (4, 13, 0)
   GtkStyleContext *context;
   GtkBorder padding, border;
   gint width;
@@ -298,10 +298,10 @@ notification_plugin_size_changed (XfcePanelPlugin       *plugin,
 #endif
   gint icon_size;
 
-  size /= xfce_panel_plugin_get_nrows (notification_plugin->plugin);
+  size /= expidus_panel_plugin_get_nrows (notification_plugin->plugin);
   gtk_widget_set_size_request (GTK_WIDGET (notification_plugin->button), size, size);
-#if LIBXFCE4PANEL_CHECK_VERSION (4,13,0)
-  icon_size = xfce_panel_plugin_get_icon_size (XFCE_PANEL_PLUGIN (plugin));
+#if LIBEXPIDUS1PANEL_CHECK_VERSION (4,13,0)
+  icon_size = expidus_panel_plugin_get_icon_size (EXPIDUS_PANEL_PLUGIN (plugin));
 #else
   /* Calculate the size of the widget because the theme can override it */
   context = gtk_widget_get_style_context (GTK_WIDGET (notification_plugin->button));
@@ -333,12 +333,12 @@ notification_plugin_size_changed (XfcePanelPlugin       *plugin,
 
 
 static void
-notification_plugin_construct (XfcePanelPlugin *plugin)
+notification_plugin_construct (ExpidusPanelPlugin *plugin)
 {
   NotificationPlugin *notification_plugin;
 
   /* setup transation domain */
-  xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+  expidus_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
   /* create the plugin */
   notification_plugin = notification_plugin_new (plugin);
@@ -346,7 +346,7 @@ notification_plugin_construct (XfcePanelPlugin *plugin)
   /* add the button to the panel */
   gtk_container_add (GTK_CONTAINER (plugin), notification_plugin->button);
   /* show the panel's right-click menu */
-  xfce_panel_plugin_add_action_widget (plugin, notification_plugin->button);
+  expidus_panel_plugin_add_action_widget (plugin, notification_plugin->button);
 
   /* connect plugin signals */
   g_signal_connect (G_OBJECT (plugin), "free-data",
@@ -356,12 +356,12 @@ notification_plugin_construct (XfcePanelPlugin *plugin)
                     G_CALLBACK (notification_plugin_size_changed), notification_plugin);
 
   /* show the configure menu item and connect signal */
-  xfce_panel_plugin_menu_show_configure (plugin);
+  expidus_panel_plugin_menu_show_configure (plugin);
   g_signal_connect (G_OBJECT (plugin), "configure-plugin",
                     G_CALLBACK (notification_plugin_configure), notification_plugin);
 
   /* show the about menu item and connect signal */
-  xfce_panel_plugin_menu_show_about (plugin);
+  expidus_panel_plugin_menu_show_about (plugin);
   g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (notification_plugin_about), NULL);
 }

@@ -1,6 +1,6 @@
-/*  xfce4-notification-plugin
+/*  expidus1-notification-plugin
  *
- *  Copyright (C) 2017 Simon Steinbeiß <simon@xfce.org>
+ *  Copyright (C) 2017 Simon Steinbeiß <simon@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@
 
 #include <gtk/gtk.h>
 #include <xfconf/xfconf.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
-#include <common/xfce-notify-log.h>
+#include <common/expidus-notify-log.h>
 
 #include "notification-plugin.h"
 #include "notification-plugin-log.h"
@@ -62,11 +62,11 @@ notification_plugin_settings_activate_cb (GtkMenuItem *menuitem,
   GAppInfo *app_info;
   GError   *error = NULL;
 
-  app_info = g_app_info_create_from_commandline ("xfce4-notifyd-config", "Notification Settings",
+  app_info = g_app_info_create_from_commandline ("expidus1-notifyd-config", "Notification Settings",
                                                  G_APP_INFO_CREATE_NONE, NULL);
   if (!g_app_info_launch (app_info, NULL, NULL, &error)) {
     if (error != NULL) {
-      g_warning ("xfce4-notifyd-config could not be launched. %s", error->message);
+      g_warning ("expidus1-notifyd-config could not be launched. %s", error->message);
       g_error_free (error);
     }
   }
@@ -90,11 +90,11 @@ notification_plugin_clear_log_dialog (GtkWidget *widget, gpointer user_data)
 	
 	if (xfconf_channel_get_bool (notification_plugin->channel, SETTING_HIDE_CLEAR_PROMPT, FALSE))
 	{
-	  xfce_notify_log_clear ();
+	  expidus_notify_log_clear ();
 	  return;
 	}
 
-  GtkWidget *dialog = xfce_notify_clear_log_dialog ();
+  GtkWidget *dialog = expidus_notify_clear_log_dialog ();
   gtk_dialog_run (GTK_DIALOG (dialog));
   gtk_widget_destroy (dialog);
 }
@@ -124,15 +124,15 @@ notification_plugin_menu_populate (NotificationPlugin *notification_plugin)
   /* Clean up the list and re-fill it */
   gtk_container_foreach (GTK_CONTAINER (menu), func, menu);
 
-  notify_log = xfce_notify_log_get();
-  notify_log_icon_folder = xfce_resource_save_location (XFCE_RESOURCE_CACHE,
-                                                          XFCE_NOTIFY_ICON_PATH, TRUE);
+  notify_log = expidus_notify_log_get();
+  notify_log_icon_folder = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
+                                                          EXPIDUS_NOTIFY_ICON_PATH, TRUE);
   log_icon_size = xfconf_channel_get_int (notification_plugin->channel,
                                           SETTING_LOG_ICON_SIZE, -1);
   if (log_icon_size == -1)
     log_icon_size = DEFAULT_LOG_ICON_SIZE;
 
-  /* switch for the do not disturb mode of xfce4-notifyd */
+  /* switch for the do not disturb mode of expidus1-notifyd */
   mi = gtk_menu_item_new ();
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
   label = gtk_label_new (NULL);
@@ -350,7 +350,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), mi);
   gtk_widget_show (mi);
 
-  /* checkmenuitem for the do not disturb mode of xfce4-notifyd */
+  /* checkmenuitem for the do not disturb mode of expidus1-notifyd */
   image = gtk_image_new_from_icon_name ("edit-clear-symbolic", GTK_ICON_SIZE_MENU);
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   mi = gtk_image_menu_item_new_with_mnemonic (_("_Clear log"));

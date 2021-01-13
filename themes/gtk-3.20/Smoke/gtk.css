@@ -1,32 +1,32 @@
-#XfceNotifyWindow {
+#ExpidusNotifyWindow {
     background-color: #4d4d4d;
     border-radius: 20px;
     border: 1px solid #fff;
     padding: 20px;
 }
 
-#XfceNotifyWindow:hover {
+#ExpidusNotifyWindow:hover {
     border-width: 2px;
     border-color: #ffffff;
 }
 
-#XfceNotifyWindow label,
-#XfceNotifyWindow image {
+#ExpidusNotifyWindow label,
+#ExpidusNotifyWindow image {
     color: #ffffff;
 }
 
-#XfceNotifyWindow label#summary {
+#ExpidusNotifyWindow label#summary {
     font-weight: Bold;
 }
 
-#XfceNotifyWindow button {
+#ExpidusNotifyWindow button {
     border-style: none;
     background-image: none;
     background-color: #202020;
     color: #ffffff;
 }
 
-#XfceNotifyWindow button:hover {
+#ExpidusNotifyWindow button:hover {
     border-style: none;
     background-image: none;
     background-color: #404040;
