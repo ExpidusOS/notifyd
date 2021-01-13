@@ -24,7 +24,7 @@ for i in {1..10}; do
   # than what we currently want to test
   killall -q expidus1-notifyd;
   # reset the known applications property, to see if values get inserted correctly
-  xfconf-query -c expidus1-notifyd -p /applications/known_applications -r;
+  esconf-query -c expidus1-notifyd -p /applications/known_applications -r;
 
   ../expidus1-notifyd/expidus1-notifyd &
   PID=$!
@@ -46,7 +46,7 @@ for i in {1..10}; do
 
   # check if the known applications were recorded
   ps -p $PID >/dev/null 2>&1 || die "DIED after send" 2
-  if [ $(xfconf-query -c expidus1-notifyd -p /applications/known_applications | wc -l) -eq 0 ]; then
+  if [ $(esconf-query -c expidus1-notifyd -p /applications/known_applications | wc -l) -eq 0 ]; then
    die "no known application"  3
   fi
 

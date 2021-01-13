@@ -32,7 +32,7 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkx.h>
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <libexpidus1ui/libexpidus1ui.h>
 #include <libnotify/notify.h>
 
@@ -108,7 +108,7 @@ static void
 expidus1_notifyd_config_theme_combo_changed(GtkComboBox *theme_combo,
                                          gpointer user_data)
 {
-    XfconfChannel *channel = user_data;
+    EsconfChannel *channel = user_data;
     GtkTreeModel *model;
     GtkTreeIter iter;
     gchar *theme = NULL;
@@ -119,12 +119,12 @@ expidus1_notifyd_config_theme_combo_changed(GtkComboBox *theme_combo,
     model = gtk_combo_box_get_model (theme_combo);
 
     gtk_tree_model_get(model, &iter, 0, &theme, -1);
-    xfconf_channel_set_string(channel, "/theme", theme);
+    esconf_channel_set_string(channel, "/theme", theme);
     g_free(theme);
 }
 
 static void
-expidus1_notifyd_config_theme_changed(XfconfChannel *channel,
+expidus1_notifyd_config_theme_changed(EsconfChannel *channel,
                                    const gchar *property,
                                    const GValue *value,
                                    gpointer user_data)
@@ -284,7 +284,7 @@ display_header_func (GtkListBoxRow *row,
 static void
 expidus1_notifyd_mute_application (GtkListBox *known_applications_listbox,
                                 GtkListBoxRow *selected_application_row,
-                                XfconfChannel *channel)
+                                EsconfChannel *channel)
 {
 
     GtkWidget *application_box;
@@ -297,7 +297,7 @@ expidus1_notifyd_mute_application (GtkListBox *known_applications_listbox,
     const gchar *application_name;
     gchar *new_app_name;
 
-    muted_applications = xfconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
+    muted_applications = esconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
     if (muted_applications == NULL)
         muted_applications = g_ptr_array_new ();
 
@@ -327,10 +327,10 @@ expidus1_notifyd_mute_application (GtkListBox *known_applications_listbox,
     else
         g_ptr_array_add (muted_applications, val);
 
-    if (!xfconf_channel_set_arrayv (channel, MUTED_APPLICATIONS_PROP, muted_applications))
+    if (!esconf_channel_set_arrayv (channel, MUTED_APPLICATIONS_PROP, muted_applications))
         g_warning ("Could not add %s to the list of muted applications.", new_app_name);
 
-    xfconf_array_free (muted_applications);
+    esconf_array_free (muted_applications);
 }
 
 static void
@@ -353,7 +353,7 @@ expidus1_notifyd_switch_activated (GtkSwitch *mute_switch,
                                 gboolean state,
                                 gpointer user_data)
 {
-    XfconfChannel *channel = user_data;
+    EsconfChannel *channel = user_data;
     GtkWidget *row_box;
     GtkWidget *selected_application_row;
     GtkWidget *known_applications_listbox;
@@ -376,7 +376,7 @@ listbox_remove_all (GtkWidget *widget, gpointer user_data)
 }
 
 static void
-expidus1_notifyd_known_applications_changed (XfconfChannel *channel,
+expidus1_notifyd_known_applications_changed (EsconfChannel *channel,
                                const gchar *property,
                                const GValue *value,
                                gpointer user_data)
@@ -393,8 +393,8 @@ expidus1_notifyd_known_applications_changed (XfconfChannel *channel,
     guint i, j;
     const gchar *icon_name;
 
-    known_applications = xfconf_channel_get_arrayv (channel, KNOWN_APPLICATIONS_PROP);
-    muted_applications = xfconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
+    known_applications = esconf_channel_get_arrayv (channel, KNOWN_APPLICATIONS_PROP);
+    muted_applications = esconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
 
     /* TODO: Check the old list versus the new one and only add/remove rows
              as needed instead instead of cleaning up the whole widget */
@@ -467,8 +467,8 @@ expidus1_notifyd_known_applications_changed (XfconfChannel *channel,
             g_signal_connect (G_OBJECT (mute_switch), "state-set", G_CALLBACK (expidus1_notifyd_switch_activated), channel);
         }
     }
-    xfconf_array_free (known_applications);
-    xfconf_array_free (muted_applications);
+    esconf_array_free (known_applications);
+    esconf_array_free (muted_applications);
     gtk_widget_show_all (known_applications_listbox);
 }
 
@@ -772,7 +772,7 @@ placeholder_label_new (gchar *place_holder_text)
 static GtkWidget *
 expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
 {
-    XfconfChannel *channel;
+    EsconfChannel *channel;
     GtkWidget *dlg;
     GtkWidget *btn;
     GtkWidget *sbtn;
@@ -813,7 +813,7 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
     g_signal_connect(G_OBJECT(help_button), "clicked",
                     G_CALLBACK(expidus1_notifyd_show_help), dlg);
 
-    if(!xfconf_init(&error)) {
+    if(!esconf_init(&error)) {
         expidus_message_dialog(NULL, _("Expidus Notify Daemon"),
                             "dialog-error",
                             _("Settings daemon is unavailable"),
@@ -823,14 +823,14 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
         exit(EXIT_FAILURE);
     }
 
-    channel = xfconf_channel_new("expidus1-notifyd");
+    channel = esconf_channel_new("expidus1-notifyd");
 
     /**************
         GENERAL   *
      **************/
     // Behavior
     do_not_disturb_switch = GTK_WIDGET (gtk_builder_get_object (builder, "do_not_disturb"));
-    xfconf_g_property_bind (channel, "/do-not-disturb", G_TYPE_BOOLEAN,
+    esconf_g_property_bind (channel, "/do-not-disturb", G_TYPE_BOOLEAN,
                             G_OBJECT (do_not_disturb_switch), "active");
     /* Manually control the revealer for the infobar because of https://bugzilla.gnome.org/show_bug.cgi?id=710888 */
     do_not_disturb_info = GTK_WIDGET (gtk_builder_get_object (builder, "do_not_disturb_info"));
@@ -840,14 +840,14 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
                       G_CALLBACK (expidus1_notifyd_do_not_disturb_activated), do_not_disturb_info);
 
     primary_monitor = GTK_WIDGET(gtk_builder_get_object(builder, "primary_monitor"));
-    xfconf_g_property_bind(channel, "/primary-monitor", G_TYPE_UINT,
+    esconf_g_property_bind(channel, "/primary-monitor", G_TYPE_UINT,
                            G_OBJECT(primary_monitor), "active");
     if(gtk_combo_box_get_active(GTK_COMBO_BOX(primary_monitor)) == -1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(primary_monitor), 0);
 
     // Appearance
     theme_combo = GTK_WIDGET(gtk_builder_get_object(builder, "theme_combo"));
-    current_theme = xfconf_channel_get_string(channel, "/theme", "Default");
+    current_theme = esconf_channel_get_string(channel, "/theme", "Default");
     expidus1_notifyd_config_setup_theme_combo(theme_combo, current_theme);
     g_free(current_theme);
     g_signal_connect(G_OBJECT(theme_combo), "changed",
@@ -858,7 +858,7 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
                      theme_combo);
 
     position_combo = GTK_WIDGET(gtk_builder_get_object(builder, "position_combo"));
-    xfconf_g_property_bind(channel, "/notify-location", G_TYPE_UINT,
+    esconf_g_property_bind(channel, "/notify-location", G_TYPE_UINT,
                            G_OBJECT(position_combo), "active");
     if(gtk_combo_box_get_active(GTK_COMBO_BOX(position_combo)) == -1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(position_combo), GTK_CORNER_TOP_RIGHT);
@@ -867,21 +867,21 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
     g_signal_connect(G_OBJECT(slider), "format-value",
                      G_CALLBACK(expidus1_notifyd_slider_format_value), NULL);
     adj = gtk_range_get_adjustment(GTK_RANGE(slider));
-    xfconf_g_property_bind(channel, "/initial-opacity", G_TYPE_DOUBLE,
+    esconf_g_property_bind(channel, "/initial-opacity", G_TYPE_DOUBLE,
                            G_OBJECT(adj), "value");
 
     sbtn = GTK_WIDGET(gtk_builder_get_object(builder, "expire_timeout_sbtn"));
-    xfconf_g_property_bind(channel, "/expire-timeout", G_TYPE_INT,
+    esconf_g_property_bind(channel, "/expire-timeout", G_TYPE_INT,
                            G_OBJECT(sbtn), "value");
 
     do_fadeout = GTK_WIDGET(gtk_builder_get_object(builder, "do_fadeout"));
     gtk_switch_set_active (GTK_SWITCH (do_fadeout), TRUE);
-    xfconf_g_property_bind(channel, "/do-fadeout", G_TYPE_BOOLEAN,
+    esconf_g_property_bind(channel, "/do-fadeout", G_TYPE_BOOLEAN,
                            G_OBJECT(do_fadeout), "active");
 
     slideout_widgets.do_slideout_label = GTK_WIDGET(gtk_builder_get_object(builder, "do_slideout_label"));
     slideout_widgets.do_slideout = GTK_WIDGET(gtk_builder_get_object(builder, "do_slideout"));
-    xfconf_g_property_bind(channel, "/do-slideout", G_TYPE_BOOLEAN,
+    esconf_g_property_bind(channel, "/do-slideout", G_TYPE_BOOLEAN,
                            G_OBJECT(slideout_widgets.do_slideout), "active");
     g_signal_connect (G_OBJECT (do_fadeout), "state-set",
                       G_CALLBACK (expidus1_notifyd_do_fadeout_activated), &slideout_widgets);
@@ -924,16 +924,16 @@ expidus1_notifyd_config_setup_dialog(GtkBuilder *builder)
     log_widgets.log_level_apps_label = GTK_WIDGET (gtk_builder_get_object (builder, "log_level_apps_label"));
     log_widgets.infobar_label = GTK_WIDGET (gtk_builder_get_object (builder, "infobar_label"));
     log_switch = GTK_WIDGET (gtk_builder_get_object (builder, "log_switch"));
-    xfconf_g_property_bind (channel, "/notification-log", G_TYPE_BOOLEAN,
+    esconf_g_property_bind (channel, "/notification-log", G_TYPE_BOOLEAN,
                             G_OBJECT (log_switch), "active");
     g_signal_connect (G_OBJECT (log_switch), "state-set",
                       G_CALLBACK (expidus1_notifyd_log_activated), &log_widgets);
-    xfconf_g_property_bind(channel, "/log-level", G_TYPE_UINT,
+    esconf_g_property_bind(channel, "/log-level", G_TYPE_UINT,
                            G_OBJECT(log_widgets.log_level), "active");
-    xfconf_g_property_bind(channel, "/log-level-apps", G_TYPE_UINT,
+    esconf_g_property_bind(channel, "/log-level-apps", G_TYPE_UINT,
                           G_OBJECT(log_widgets.log_level_apps), "active");
     sbtn = GTK_WIDGET (gtk_builder_get_object (builder, "log_max_size"));
-    xfconf_g_property_bind(channel, "/log-max-size", G_TYPE_UINT,
+    esconf_g_property_bind(channel, "/log-max-size", G_TYPE_UINT,
                            G_OBJECT(sbtn), "value");
 
     /* Initialize the settings' states correctly */
@@ -1075,7 +1075,7 @@ main(int argc,
 
     g_bus_unwatch_name (watch_handle_id);
     notify_uninit();
-    xfconf_shutdown();
+    esconf_shutdown();
 
     return EXIT_SUCCESS;
 }

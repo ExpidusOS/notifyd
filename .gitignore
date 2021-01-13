@@ -42,7 +42,7 @@ expidus1-notifyd-config/expidus1-notifyd-config.desktop
 expidus1-notifyd-config/expidus1-notifyd-config.ui.h
 
 expidus1-notifyd/notify-dbus.h
-expidus1-notifyd/org.expidus.expidus1-notifyd.Notifications.service
+expidus1-notifyd/com.expidus.expidus1-notifyd.Notifications.service
 expidus1-notifyd/expidus-notify-enum-types.c
 expidus1-notifyd/expidus-notify-enum-types.h
 expidus1-notifyd/expidus-notify-marshal.c

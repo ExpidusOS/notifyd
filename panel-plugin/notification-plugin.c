@@ -25,7 +25,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <libexpidus1util/libexpidus1util.h>
 #include <libexpidus1panel/libexpidus1panel.h>
 
@@ -96,8 +96,8 @@ cb_button_pressed (GtkButton *button,
 
   if (event->button == 2)
     {
-      gboolean state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
-      xfconf_channel_set_bool (notification_plugin->channel, "/do-not-disturb", !state);
+      gboolean state = esconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
+      esconf_channel_set_bool (notification_plugin->channel, "/do-not-disturb", !state);
       return TRUE;
     }
 
@@ -162,7 +162,7 @@ notification_plugin_update_icon (NotificationPlugin *notification_plugin,
 
 
 static void
-notification_plugin_dnd_updated (XfconfChannel *channel,
+notification_plugin_dnd_updated (EsconfChannel *channel,
                                  const gchar *property,
                                  const GValue *value,
                                  gpointer user_data)
@@ -170,7 +170,7 @@ notification_plugin_dnd_updated (XfconfChannel *channel,
   NotificationPlugin *notification_plugin = user_data;
   gboolean state;
 
-  state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
+  state = esconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
   notification_plugin_update_icon (notification_plugin, state);
 }
 
@@ -186,7 +186,7 @@ notification_plugin_log_file_changed (GFileMonitor     *monitor,
   NotificationPlugin    *notification_plugin = user_data;
   gboolean state;
 
-  state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
+  state = esconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
   /* If the log gets cleared, the file gets deleted so make sure not to indicate that
      there are new notifications */
   if (event_type == G_FILE_MONITOR_EVENT_DELETED)
@@ -212,9 +212,9 @@ notification_plugin_new (ExpidusPanelPlugin *panel_plugin)
   notification_plugin = g_slice_new0 (NotificationPlugin);
   notification_plugin->plugin = panel_plugin;
 
-  /* Initialize xfconf */
-  xfconf_init (NULL);
-  notification_plugin->channel = xfconf_channel_new ("expidus1-notifyd");
+  /* Initialize esconf */
+  esconf_init (NULL);
+  notification_plugin->channel = esconf_channel_new ("expidus1-notifyd");
 
   /* As the plugin is starting up we presume there are no new notifications */
   notification_plugin->new_notifications = FALSE;
@@ -224,7 +224,7 @@ notification_plugin_new (ExpidusPanelPlugin *panel_plugin)
   notification_plugin->button = expidus_panel_create_toggle_button ();
   gtk_widget_set_tooltip_text (GTK_WIDGET (notification_plugin->button), _("Notifications"));
   notification_plugin->image = gtk_image_new ();
-  state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
+  state = esconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
   notification_plugin_update_icon (notification_plugin, state);
 
   gtk_container_add (GTK_CONTAINER (notification_plugin->button), notification_plugin->image);
@@ -251,7 +251,7 @@ notification_plugin_new (ExpidusPanelPlugin *panel_plugin)
   g_signal_connect (log_file_monitor, "changed",
                     G_CALLBACK (notification_plugin_log_file_changed), notification_plugin);
 
-  /* Start monitoring the "do not disturb" setting in xfconf */
+  /* Start monitoring the "do not disturb" setting in esconf */
   g_signal_connect (G_OBJECT (notification_plugin->channel), "property-changed::" "/do-not-disturb",
                     G_CALLBACK (notification_plugin_dnd_updated), notification_plugin);
 

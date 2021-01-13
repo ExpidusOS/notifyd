@@ -81,7 +81,7 @@ expidus1_notifyd_config_expidus1_notifyd_config_LDADD = \
 	$(common_ldadd) \
 	$(LIBNOTIFY_LIBS)
 
-service_in_files = expidus1-notifyd/org.expidus.expidus1-notifyd.Notifications.service.in
+service_in_files = expidus1-notifyd/com.expidus.expidus1-notifyd.Notifications.service.in
 systemd_user_in_files = expidus1-notifyd/expidus1-notifyd.service.in
 dist_service = \
 	$(service_in_files) \

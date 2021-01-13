@@ -37,7 +37,7 @@
 #include <gdk/gdkx.h>
 #include <gio/gio.h>
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 
 #include <common/expidus-notify-log.h>
 
@@ -72,7 +72,7 @@ struct _ExpidusNotifyDaemon
     GtkCssProvider *css_provider;
     gboolean is_default_theme;
 
-    XfconfChannel *settings;
+    EsconfChannel *settings;
 
     GTree *active_notifications;
     GList **reserved_rectangles;
@@ -122,10 +122,10 @@ static gboolean notify_get_capabilities (ExpidusNotifyGBus *skeleton,
                                 		 GDBusMethodInvocation   *invocation,
                                          ExpidusNotifyDaemon *xndaemon);
 
-static void notify_update_known_applications (XfconfChannel *channel,
+static void notify_update_known_applications (EsconfChannel *channel,
                                               gchar *app_name);
 
-static gboolean notify_application_is_muted (XfconfChannel *channel,
+static gboolean notify_application_is_muted (EsconfChannel *channel,
                                              gchar *new_app_name);
 
 static gboolean notify_notify (ExpidusNotifyGBus *skeleton,
@@ -1051,7 +1051,7 @@ notify_update_theme_foreach (gpointer key, gpointer value, gpointer data)
 }
 
 static void
-notify_update_known_applications (XfconfChannel *channel, gchar *new_app_name)
+notify_update_known_applications (EsconfChannel *channel, gchar *new_app_name)
 {
     GPtrArray *known_applications;
     GValue *val;
@@ -1061,13 +1061,13 @@ notify_update_known_applications (XfconfChannel *channel, gchar *new_app_name)
     g_value_init (val, G_TYPE_STRING);
     g_value_take_string (val, new_app_name);
 
-    known_applications = xfconf_channel_get_arrayv (channel, KNOWN_APPLICATIONS_PROP);
+    known_applications = esconf_channel_get_arrayv (channel, KNOWN_APPLICATIONS_PROP);
     /* No known applications, initialize the channel and property */
     if (known_applications == NULL || known_applications->len < 1) {
         GPtrArray *array;
         array = g_ptr_array_new ();
         g_ptr_array_add (array, val);
-        if (!xfconf_channel_set_arrayv (channel, KNOWN_APPLICATIONS_PROP, array))
+        if (!esconf_channel_set_arrayv (channel, KNOWN_APPLICATIONS_PROP, array))
             g_warning ("Could not initialize the application log: %s", new_app_name);
         g_ptr_array_unref (array);
     }
@@ -1091,23 +1091,23 @@ notify_update_known_applications (XfconfChannel *channel, gchar *new_app_name)
         /* Unknown application, add it in alphabetical order */
         if (application_is_known == FALSE) {
             g_ptr_array_insert (known_applications, index, val);
-            if (!xfconf_channel_set_arrayv (channel, KNOWN_APPLICATIONS_PROP, known_applications))
+            if (!esconf_channel_set_arrayv (channel, KNOWN_APPLICATIONS_PROP, known_applications))
                 g_warning ("Could not add a new application to the log: %s", new_app_name);
         }
         else {
             g_free (val);
         }
     }
-    xfconf_array_free (known_applications);
+    esconf_array_free (known_applications);
 }
 
 static gboolean
-notify_application_is_muted (XfconfChannel *channel, gchar *new_app_name)
+notify_application_is_muted (EsconfChannel *channel, gchar *new_app_name)
 {
     GPtrArray *muted_applications;
     guint i;
 
-    muted_applications = xfconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
+    muted_applications = esconf_channel_get_arrayv (channel, MUTED_APPLICATIONS_PROP);
 
     /* Check whether this application should be muted */
     if (muted_applications != NULL) {
@@ -1119,7 +1119,7 @@ notify_application_is_muted (XfconfChannel *channel, gchar *new_app_name)
             }
         }
     }
-    xfconf_array_free (muted_applications);
+    esconf_array_free (muted_applications);
     return FALSE;
 }
 
@@ -1477,7 +1477,7 @@ expidus_notify_daemon_set_theme(ExpidusNotifyDaemon *xndaemon,
 
 
 static void
-expidus_notify_daemon_settings_changed(XfconfChannel *channel,
+expidus_notify_daemon_settings_changed(EsconfChannel *channel,
                                     const gchar *property,
                                     const GValue *value,
                                     gpointer user_data)
@@ -1543,54 +1543,54 @@ expidus_notify_daemon_load_config (ExpidusNotifyDaemon *xndaemon,
 {
     gchar *theme;
 
-    xndaemon->settings = xfconf_channel_new("expidus1-notifyd");
+    xndaemon->settings = esconf_channel_new("expidus1-notifyd");
 
-    xndaemon->expire_timeout = xfconf_channel_get_int(xndaemon->settings,
+    xndaemon->expire_timeout = esconf_channel_get_int(xndaemon->settings,
                                                     "/expire-timeout",
                                                     -1);
     if(xndaemon->expire_timeout != -1)
         xndaemon->expire_timeout *= 1000;
 
-    xndaemon->initial_opacity = xfconf_channel_get_double(xndaemon->settings,
+    xndaemon->initial_opacity = esconf_channel_get_double(xndaemon->settings,
                                                         "/initial-opacity",
                                                         0.9);
 
-    theme = xfconf_channel_get_string(xndaemon->settings,
+    theme = esconf_channel_get_string(xndaemon->settings,
                                       "/theme", "Default");
     expidus_notify_daemon_set_theme(xndaemon, theme);
     g_free(theme);
 
-    xndaemon->notify_location = xfconf_channel_get_uint(xndaemon->settings,
+    xndaemon->notify_location = esconf_channel_get_uint(xndaemon->settings,
                                                       "/notify-location",
                                                       GTK_CORNER_TOP_RIGHT);
 
-    xndaemon->do_fadeout = xfconf_channel_get_bool(xndaemon->settings,
+    xndaemon->do_fadeout = esconf_channel_get_bool(xndaemon->settings,
                                                 "/do-fadeout", TRUE);
 
-    xndaemon->do_slideout = xfconf_channel_get_bool(xndaemon->settings,
+    xndaemon->do_slideout = esconf_channel_get_bool(xndaemon->settings,
                                                 "/do-slideout", FALSE);
 
-    xndaemon->primary_monitor = xfconf_channel_get_uint(xndaemon->settings,
+    xndaemon->primary_monitor = esconf_channel_get_uint(xndaemon->settings,
                                                         "/primary-monitor", 0);
 
-    xndaemon->do_not_disturb = xfconf_channel_get_bool(xndaemon->settings,
+    xndaemon->do_not_disturb = esconf_channel_get_bool(xndaemon->settings,
                                                        "/do-not-disturb",
                                                        FALSE);
 
-    xndaemon->notification_log = xfconf_channel_get_bool(xndaemon->settings,
+    xndaemon->notification_log = esconf_channel_get_bool(xndaemon->settings,
                                                          "/notification-log",
                                                          FALSE);
-    xndaemon->log_level = xfconf_channel_get_uint(xndaemon->settings,
+    xndaemon->log_level = esconf_channel_get_uint(xndaemon->settings,
                                                         "/log-level",
                                                         0);
-    xndaemon->log_level_apps = xfconf_channel_get_uint(xndaemon->settings,
+    xndaemon->log_level_apps = esconf_channel_get_uint(xndaemon->settings,
                                                         "/log-level-apps",
                                                         0);
-    xndaemon->log_max_size = xfconf_channel_get_uint(xndaemon->settings,
+    xndaemon->log_max_size = esconf_channel_get_uint(xndaemon->settings,
                                                      "/log-max-size",
                                                      100);
     /* Clean up old notifications from the backlog */
-    xfconf_channel_reset_property (xndaemon->settings, "/backlog", TRUE);
+    esconf_channel_reset_property (xndaemon->settings, "/backlog", TRUE);
 
     g_signal_connect(G_OBJECT(xndaemon->settings), "property-changed",
                      G_CALLBACK(expidus_notify_daemon_settings_changed),

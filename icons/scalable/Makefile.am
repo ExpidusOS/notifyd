@@ -1,6 +1,6 @@
 iconsdir = $(datadir)/icons/hicolor/scalable/apps
 icons_DATA =								\
-	org.expidus.notification.svg
+	com.expidus.notification.svg
 
 EXTRA_DIST =								\
 	$(icons_DATA)

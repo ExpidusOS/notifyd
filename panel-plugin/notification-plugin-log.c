@@ -30,7 +30,7 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <libexpidus1util/libexpidus1util.h>
 #include <libexpidus1panel/libexpidus1panel.h>
 
@@ -88,7 +88,7 @@ notification_plugin_clear_log_dialog (GtkWidget *widget, gpointer user_data)
 {
   NotificationPlugin* notification_plugin = user_data;
 	
-	if (xfconf_channel_get_bool (notification_plugin->channel, SETTING_HIDE_CLEAR_PROMPT, FALSE))
+	if (esconf_channel_get_bool (notification_plugin->channel, SETTING_HIDE_CLEAR_PROMPT, FALSE))
 	{
 	  expidus_notify_log_clear ();
 	  return;
@@ -127,7 +127,7 @@ notification_plugin_menu_populate (NotificationPlugin *notification_plugin)
   notify_log = expidus_notify_log_get();
   notify_log_icon_folder = expidus_resource_save_location (EXPIDUS_RESOURCE_CACHE,
                                                           EXPIDUS_NOTIFY_ICON_PATH, TRUE);
-  log_icon_size = xfconf_channel_get_int (notification_plugin->channel,
+  log_icon_size = esconf_channel_get_int (notification_plugin->channel,
                                           SETTING_LOG_ICON_SIZE, -1);
   if (log_icon_size == -1)
     log_icon_size = DEFAULT_LOG_ICON_SIZE;
@@ -146,12 +146,12 @@ notification_plugin_menu_populate (NotificationPlugin *notification_plugin)
   gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (box), notification_plugin->do_not_disturb_switch, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (mi), box);
-  xfconf_g_property_bind (notification_plugin->channel, "/do-not-disturb", G_TYPE_BOOLEAN,
+  esconf_g_property_bind (notification_plugin->channel, "/do-not-disturb", G_TYPE_BOOLEAN,
                           G_OBJECT (notification_plugin->do_not_disturb_switch), "active");
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), mi);
   gtk_widget_show_all (mi);
   /* Reset the notification status icon since all items are now read */
-  state = xfconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
+  state = esconf_channel_get_bool (notification_plugin->channel, "/do-not-disturb", FALSE);
   notification_plugin->new_notifications = FALSE;
   notification_plugin_update_icon (notification_plugin, state);
   g_signal_connect (mi, "activate",
@@ -173,9 +173,9 @@ notification_plugin_menu_populate (NotificationPlugin *notification_plugin)
     groups = g_key_file_get_groups (notify_log, &num_groups);
     /* Substract 1 because the list starts with 0 */
     numberof_groups = GPOINTER_TO_UINT(num_groups) - 1;
-    log_display_limit = xfconf_channel_get_int (notification_plugin->channel,
+    log_display_limit = esconf_channel_get_int (notification_plugin->channel,
                                                 SETTING_LOG_DISPLAY_LIMIT, -1);
-    log_only_today = xfconf_channel_get_bool (notification_plugin->channel,
+    log_only_today = esconf_channel_get_bool (notification_plugin->channel,
                                               SETTING_LOG_ONLY_TODAY, FALSE);
 
     if (log_display_limit == -1)

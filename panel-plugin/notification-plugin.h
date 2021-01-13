@@ -22,9 +22,9 @@
 
 G_BEGIN_DECLS
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 
-#define ICON_NAME                 "org.expidus.notification"
+#define ICON_NAME                 "com.expidus.notification"
 #define EXPIDUS_NOTIFY_LOG_FILE      "expidus1/notifyd/log"
 #define EXPIDUS_NOTIFY_ICON_PATH     "expidus1/notifyd/icons/"
 #define SETTING_LOG_DISPLAY_LIMIT "/plugin/log-display-limit"
@@ -38,7 +38,7 @@ G_BEGIN_DECLS
 typedef struct
 {
     ExpidusPanelPlugin *plugin;
-    XfconfChannel   *channel;
+    EsconfChannel   *channel;
 
     /* state */
     gboolean         new_notifications;

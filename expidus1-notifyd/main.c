@@ -29,7 +29,7 @@
 
 #include <gtk/gtk.h>
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <libexpidus1util/libexpidus1util.h>
 #include <libexpidus1ui/libexpidus1ui.h>
 
@@ -42,7 +42,7 @@ main(int argc,
     ExpidusNotifyDaemon *xndaemon;
     GError *error = NULL;
 
-    xfconf_init(NULL);
+    esconf_init(NULL);
  	
     gtk_init(&argc, &argv);
 

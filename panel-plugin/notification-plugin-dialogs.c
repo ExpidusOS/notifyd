@@ -24,7 +24,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <libexpidus1ui/libexpidus1ui.h>
 #include <libexpidus1panel/libexpidus1panel.h>
 
@@ -84,7 +84,7 @@ notification_plugin_configure (ExpidusPanelPlugin      *plugin,
   gtk_window_set_icon_name (GTK_WINDOW (dialog), ICON_NAME);
   gtk_widget_show (dialog);
 
-  log_display_limit = xfconf_channel_get_int (notification_plugin->channel,
+  log_display_limit = esconf_channel_get_int (notification_plugin->channel,
                                               SETTING_LOG_DISPLAY_LIMIT, DEFAULT_LOG_DISPLAY_LIMIT);
   adjustment = gtk_adjustment_new (log_display_limit, 0.0, 100.0, 1.0, 5.0, 0.0);
   grid = gtk_grid_new ();
@@ -105,7 +105,7 @@ notification_plugin_configure (ExpidusPanelPlugin      *plugin,
   gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (label), 0, 0, 1, 1);
   spin = gtk_spin_button_new (adjustment, 1.0, 0);
   gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (spin), 1, 0, 1, 1);
-  xfconf_g_property_bind (notification_plugin->channel, SETTING_LOG_DISPLAY_LIMIT, G_TYPE_INT,
+  esconf_g_property_bind (notification_plugin->channel, SETTING_LOG_DISPLAY_LIMIT, G_TYPE_INT,
                           G_OBJECT (spin), "value");
 
   label = gtk_label_new (_("Only show notifications from today"));
@@ -118,7 +118,7 @@ notification_plugin_configure (ExpidusPanelPlugin      *plugin,
   check = gtk_switch_new ();
   gtk_widget_set_halign (check, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (check), 1, 1, 1, 1);
-  xfconf_g_property_bind (notification_plugin->channel, SETTING_LOG_ONLY_TODAY, G_TYPE_BOOLEAN,
+  esconf_g_property_bind (notification_plugin->channel, SETTING_LOG_ONLY_TODAY, G_TYPE_BOOLEAN,
                           G_OBJECT (check), "active");
 
   label = gtk_label_new (_("Hide 'Clear log' confirmation dialog"));
@@ -131,7 +131,7 @@ notification_plugin_configure (ExpidusPanelPlugin      *plugin,
   check = gtk_switch_new ();
   gtk_widget_set_halign (check, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (check), 1, 2, 1, 1);
-  xfconf_g_property_bind (notification_plugin->channel, SETTING_HIDE_CLEAR_PROMPT, G_TYPE_BOOLEAN,
+  esconf_g_property_bind (notification_plugin->channel, SETTING_HIDE_CLEAR_PROMPT, G_TYPE_BOOLEAN,
                           G_OBJECT (check), "active");
 
   /* link the dialog to the plugin, so we can destroy it when the plugin
