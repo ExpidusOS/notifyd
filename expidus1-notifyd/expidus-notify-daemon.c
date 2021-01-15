@@ -55,7 +55,7 @@ struct _ExpidusNotifyDaemon
 {
     ExpidusNotifyGBusSkeleton parent;
 
-    ExpidusNotifyOrgExpidusNotifyd *expidus_iface_skeleton;
+    ExpidusNotifyComExpidusNotifyd *expidus_iface_skeleton;
     gint expire_timeout;
     guint bus_name_id;
     gdouble initial_opacity;
@@ -152,7 +152,7 @@ static gboolean notify_get_server_information (ExpidusNotifyGBus *skeleton,
                                                ExpidusNotifyDaemon *xndaemon);
 
 
-static gboolean notify_quit (ExpidusNotifyOrgExpidusNotifyd *skeleton,
+static gboolean notify_quit (ExpidusNotifyComExpidusNotifyd *skeleton,
                              GDBusMethodInvocation   *invocation,
                              ExpidusNotifyDaemon *xndaemon);
 
@@ -381,7 +381,7 @@ expidus_notify_bus_name_acquired_cb (GDBusConnection *connection,
         gtk_main_quit ();
     }
 
-    xndaemon->expidus_iface_skeleton  = expidus_notify_org_expidus_notifyd_skeleton_new();
+    xndaemon->expidus_iface_skeleton  = expidus_notify_com_expidus_notifyd_skeleton_new();
     exported =  g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON(xndaemon->expidus_iface_skeleton),
                                                   connection,
                                                   "/org/freedesktop/Notifications",
@@ -1417,11 +1417,11 @@ static void daemon_quit (ExpidusNotifyDaemon *xndaemon)
 }
 
 
-static gboolean notify_quit (ExpidusNotifyOrgExpidusNotifyd *skeleton,
+static gboolean notify_quit (ExpidusNotifyComExpidusNotifyd *skeleton,
                              GDBusMethodInvocation   *invocation,
                              ExpidusNotifyDaemon *xndaemon)
 {
-    expidus_notify_org_expidus_notifyd_complete_quit (skeleton, invocation);
+    expidus_notify_com_expidus_notifyd_complete_quit (skeleton, invocation);
     daemon_quit(xndaemon);
     return TRUE;
 }
