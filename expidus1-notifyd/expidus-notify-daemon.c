@@ -1367,6 +1367,7 @@ notify_notify (ExpidusNotifyGBus *skeleton,
     gtk_widget_realize(GTK_WIDGET(window));
 
     expidus_notify_gbus_complete_notify(skeleton, invocation, OUT_id);
+    expidus_notify_com_expidus_notifyd_emit_notified(xndaemon->expidus_iface_skeleton, app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout, OUT_id); 
 
     if (image_data)
       g_variant_unref (image_data);

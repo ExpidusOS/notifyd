@@ -44,5 +44,17 @@
     
     <interface name="com.expidus.Notifyd">
         <method name="Quit"/>
+
+        <signal name="Notified">
+            <arg name="app_name" type="s"/>
+            <arg name="replaces_id" type="u"/>
+            <arg name="app_icon" type="s"/>
+            <arg name="summary" type="s"/>
+            <arg name="body" type="s"/>
+            <arg name="actions" type="as"/>
+            <arg name="hints" type="a{sv}"/>
+            <arg name="expire_timeout" type="i"/>
+            <arg name="id" type="u"/>
+        </signal>
     </interface>
 </node>
